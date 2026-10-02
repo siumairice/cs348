@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: cs348-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: cs348pass
+      MYSQL_DATABASE: lego_sets
+    ports:
+      - "3306:3306"
+    volumes:
+      - cs348_mysql_data:/var/lib/mysql
+  app:
+    build: .
+    container_name: cs348-lego-app
+    depends_on:
+      - db
+
+volumes:
+  cs348_mysql_data:
