@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f7f5;
+  --surface: #ffffff;
+  --foreground: #1c1c1a;
+  --muted: #6b6b66;
+  --border: #e4e4df;
+  --accent: #d01012;
+  --accent-soft: #fdecec;
+  --brick: #f5c518;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-brick: var(--brick);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #121211;
+    --surface: #1c1c1a;
+    --foreground: #ededea;
+    --muted: #9a9a94;
+    --border: #2e2e2b;
+    --accent: #ff4d4f;
+    --accent-soft: #3a1717;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.input {
+  @apply w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-accent;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90;
+}
+
+.card {
+  @apply rounded-lg border border-border bg-surface;
+}

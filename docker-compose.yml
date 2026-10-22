@@ -50,6 +50,16 @@ services:
       DB_USER: root
       DB_PASSWORD: cs348pass
       DB_NAME: lego_sets
+  web:
+    build: ./web
+    container_name: cs348-lego-web
+    depends_on:
+      - app
+    ports:
+      - "3000:3000"
+    environment:
+      API_URL: http://app:8000
+      HOSTNAME: 0.0.0.0
 
 volumes:
   cs348_mysql_data:
