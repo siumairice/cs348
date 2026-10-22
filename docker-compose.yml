@@ -8,7 +8,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: cs348pass
       MYSQL_DATABASE: lego_sets
-    command: --local-infile=1
     ports:
       - "3307:3306"
     volumes:
@@ -18,8 +17,6 @@ services:
     container_name: cs348-lego-app
     depends_on:
       - db
-    volumes:
-      - ./data:/data:ro
 
 volumes:
   cs348_mysql_data:
