@@ -6,5 +6,6 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app.py .
+COPY sql/ sql/
 
-CMD ["python", "app.py"]
+CMD ["sh", "-c", "python sql/import.py && python app.py"]

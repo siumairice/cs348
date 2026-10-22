@@ -36,49 +36,12 @@ try:
     connection = connect_with_retry()
     cursor = connection.cursor(dictionary=True)
 
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS themes (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(100) NOT NULL
-        )
-    """)
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS sets (
-            set_num VARCHAR(50) PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            year INT NOT NULL,
-            theme_id INT,
-            FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE CASCADE
-        )
-    """)
-
-    cursor.execute("DELETE FROM sets")
-    cursor.execute("DELETE FROM themes")
-
-    cursor.execute("INSERT INTO themes (name) VALUES (%s)", ("Star Wars",))
-    star_wars_id = cursor.lastrowid
-
-    cursor.execute("INSERT INTO themes (name) VALUES (%s)", ("Icons",))
-    icons_id = cursor.lastrowid
-
-    lego_sets_data = [
-        ("75355-1", "X-Wing Starfighter", 2023, star_wars_id),
-        ("75192-1", "Millennium Falcon", 2017, star_wars_id),
-        ("10316-1", "The Lord of the Rings: Rivendell", 2023, icons_id)
-    ]
-
-    cursor.executemany(
-        "INSERT INTO sets (set_num, name, year, theme_id) VALUES (%s, %s, %s, %s)",
-        lego_sets_data
-    )
-    connection.commit()
-
     query = """
         SELECT s.set_num, s.name AS set_name, s.year, t.name AS theme_name
         FROM sets s
         INNER JOIN themes t ON s.theme_id = t.id
-        ORDER BY s.year DESC
+        ORDER BY s.year DESC, s.set_num
+        LIMIT 10
     """
     print(query)
 

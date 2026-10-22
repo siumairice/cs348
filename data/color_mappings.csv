@@ -1,0 +1,847 @@
+id,ext_system,ext_id,ext_descr,is_export_id,is_import_id
+0,BL,11,"[""Black""]",True,True
+0,BO,38,"[""Black""]",True,True
+0,LD,256,"[""Rubber_Black""]",False,True
+0,LD,0,"[""Black""]",True,True
+0,LE,342,"[""CONDUCT. BLACK""]",False,True
+0,LE,26,"[""Black"", ""BLACK""]",True,True
+1,BL,7,"[""Blue""]",True,True
+1,BO,39,"[""Blue""]",True,True
+1,LD,1,"[""Blue""]",True,True
+1,LE,23,"[""Bright Blue"", ""BR.BLUE""]",True,True
+2,BL,6,"[""Green""]",True,True
+2,BO,61,"[""Green""]",True,True
+2,LD,2,"[""Green""]",True,True
+2,LE,28,"[""Dark green"", ""DK.GREEN""]",True,True
+3,BL,39,"[""Dark Turquoise""]",True,True
+3,BO,58,"[""Dark Turquoise""]",True,True
+3,LD,3,"[""Dark_Turquoise""]",True,True
+3,LE,107,"[""Bright bluish green"", ""BR.BLUEGREEN""]",True,True
+4,BL,5,"[""Red""]",True,True
+4,BO,81,"[""Red""]",True,True
+4,LD,4,"[""Red""]",True,True
+4,LE,21,"[""Bright red"", ""BR.RED""]",True,True
+5,BL,47,"[""Dark Pink""]",True,True
+5,BO,17,"[""Dark Pink""]",True,True
+5,LD,5,"[""Dark_Pink""]",True,True
+5,LE,221,"[""Bright Purple"", ""BR. PURPLE""]",True,True
+6,BL,8,"[""Brown""]",True,True
+6,BO,46,"[""Brown""]",True,True
+6,LD,6,"[""Brown""]",True,True
+6,LE,25,"[""Earth Orange"", ""EARTH-ORA""]",False,True
+7,BL,9,"[""Light Gray""]",True,True
+7,BO,66,"[""Light Gray""]",True,True
+7,LD,7,"[""Light_Gray""]",True,True
+7,LE,2,"[""Grey""]",True,True
+8,BL,10,"[""Dark Gray""]",True,True
+8,BO,53,"[""Dark Gray""]",True,True
+8,LD,8,"[""Dark_Gray""]",True,True
+8,LE,27,"[""Dark grey"", ""DK.GREY""]",True,True
+9,BL,62,"[""Light Blue""]",True,True
+9,BO,63,"[""Light Blue""]",True,True
+9,LD,9,"[""Light_Blue""]",True,True
+9,LE,45,"[""Light blue""]",True,True
+10,BL,36,"[""Bright Green""]",True,True
+10,BO,41,"[""Bright Green""]",True,True
+10,LD,10,"[""Bright_Green""]",True,True
+10,LE,37,"[""Bright Green"", ""BR.GREEN""]",True,True
+11,BL,40,"[""Light Turquoise""]",True,True
+11,BO,12,"[""Light Turquoise""]",True,True
+11,LD,11,"[""Light_Turquoise""]",True,True
+11,LE,116,"[""Med. bluish green"", ""MD.BL-GREEN""]",True,True
+12,BL,25,"[""Salmon""]",True,True
+12,BO,84,"[""Salmon""]",True,True
+12,LD,12,"[""Salmon""]",True,True
+12,LE,101,"[""Medium Red""]",True,True
+13,BL,23,"[""Pink""]",True,True
+13,BO,3,"[""Pink""]",True,True
+13,LD,13,"[""Pink""]",True,True
+13,LE,9,"[""L.REDVIOL""]",True,True
+14,BL,3,"[""Yellow""]",True,True
+14,BO,93,"[""Yellow""]",True,True
+14,LD,14,"[""Yellow""]",True,True
+14,LE,24,"[""Bright yellow"", ""BR.YEL"", ""BRIGHT YELLOW, VERSION 2""]",True,True
+15,BL,1,"[""White""]",True,True
+15,BO,92,"[""White""]",True,True
+15,LD,15,"[""White""]",True,True
+15,LE,1,"[""White"", ""WHITE V.3""]",True,True
+17,BL,38,"[""Light Green""]",True,True
+17,BO,11,"[""Light Green""]",True,True
+17,LD,17,"[""Light_Green""]",True,True
+17,LE,6,"[""Light green"", ""L.GREEN""]",True,True
+18,BL,33,"[""Light Yellow""]",True,True
+18,BO,9,"[""Light Yellow""]",True,True
+18,LD,18,"[""Light_Yellow""]",True,True
+18,LE,3,"[""Light yellow""]",True,True
+19,BL,2,"[""Tan""]",True,True
+19,BO,89,"[""Tan""]",True,True
+19,LD,19,"[""Tan""]",True,True
+19,LE,5,"[""Brick yellow"", ""BRICK-YEL""]",True,True
+20,BL,44,"[""Light Violet""]",True,True
+20,BO,16,"[""Light Violet""]",True,True
+20,LD,20,"[""Light_Violet""]",True,True
+20,LE,39,"[""Light bluish violet"", ""L.BLUEVIOL""]",True,True
+21,BL,46,"[""Glow In Dark Opaque""]",True,True
+21,BO,127,"[""Glow in the Dark Opaque""]",True,True
+21,LD,21,"[""Glow_In_Dark_Opaque""]",True,True
+21,LE,50,"[""Phosp. White"", ""PHOS.WHITE""]",True,True
+22,BL,24,"[""Purple""]",True,True
+22,BO,4,"[""Purple""]",True,True
+22,LD,22,"[""Purple""]",True,True
+22,LE,104,"[""Bright violet"", ""BR. VIOLET""]",True,True
+23,BL,109,"[""Dark Blue-Violet""]",True,True
+23,BO,49,"[""Dark Royal Blue""]",True,True
+23,LD,23,"[""Dark_Blue_Violet""]",True,True
+23,LE,196,"[""Dark Royal blue"", ""DK. R.BLUE""]",True,True
+25,BL,4,"[""Orange""]",True,True
+25,BO,80,"[""Orange""]",True,True
+25,LD,25,"[""Orange""]",True,True
+25,LE,106,"[""Bright orange"", ""BR.ORANGE""]",True,True
+26,BL,71,"[""Magenta""]",True,True
+26,BO,72,"[""Magenta""]",True,True
+26,LD,26,"[""Magenta""]",True,True
+26,LE,124,"[""Bright reddish violet"", ""BR.RED-VIOL.""]",True,True
+27,BL,34,"[""Lime""]",True,True
+27,BO,70,"[""Lime""]",True,True
+27,LD,27,"[""Lime""]",True,True
+27,LE,119,"[""Br. yellowish green"", ""BR.YEL-GREEN"", ""BRIGHT YELLOWISH GREEN""]",True,True
+28,BL,69,"[""Dark Tan""]",True,True
+28,BO,57,"[""Dark Tan""]",True,True
+28,LD,28,"[""Dark_Tan""]",True,True
+28,LE,138,"[""Sand yellow""]",True,True
+29,BL,104,"[""Bright Pink""]",True,True
+29,BO,45,"[""Bright Pink""]",True,True
+29,LD,29,"[""Bright_Pink""]",True,True
+29,LE,222,"[""Light Purple"", ""LGH. PURPLE""]",True,True
+30,BL,157,"[""Medium Lavender""]",True,True
+30,BO,76,"[""Medium Lavender""]",True,True
+30,LD,30,"[""Medium_Lavender""]",True,True
+30,LE,324,"[""Medium Lavender"", ""MEDIUM LAVENDEL""]",True,True
+31,BL,154,"[""Lavender""]",True,True
+31,BO,36,"[""Lavender""]",True,True
+31,LD,31,"[""Lavender""]",True,True
+31,LE,325,"[""Lavender""]",True,True
+32,LD,32,"[""Trans_Black_IR_Lens""]",True,True
+32,LE,355,"[""Tr.Black IR""]",True,True
+32,LE,109,"[""Black IR""]",True,True
+33,BL,14,"[""Trans-Dark Blue""]",True,True
+33,BO,98,"[""Transparent Dark Blue""]",True,True
+33,LD,33,"[""Trans_Dark_Blue""]",True,True
+33,LE,43,"[""Tr. Blue"", ""TR.BLUE""]",True,True
+34,BL,20,"[""Trans-Green""]",True,True
+34,BO,100,"[""Transparent Green""]",True,True
+34,LD,34,"[""Trans_Green""]",True,True
+34,LE,48,"[""Tr. Green"", ""TR.GREEN""]",True,True
+35,BL,108,"[""Trans-Bright Green""]",True,True
+35,BO,96,"[""Transparent Bright Green""]",True,True
+35,LD,35,"[""Trans_Bright_Green""]",True,True
+35,LE,311,"[""Transparent Bright Green"", ""TR. BR. GREEN""]",False,True
+36,BL,17,"[""Trans-Red""]",True,True
+36,BO,108,"[""Transparent Red""]",True,True
+36,LD,36,"[""Trans_Red""]",True,True
+36,LE,41,"[""Tr. Red"", ""TR.RED""]",True,True
+40,BL,13,"[""Trans-Black""]",True,True
+40,BO,95,"[""Transparent Black""]",True,True
+40,LD,40,"[""Trans_Black""]",True,True
+40,LE,111,"[""Tr. Brown"", ""TR.BROWN""]",True,True
+41,BL,15,"[""Trans-Light Blue""]",True,True
+41,BO,101,"[""Transparent Light Blue""]",True,True
+41,LD,43,"[""Trans_Medium_Blue""]",True,True
+41,LE,42,"[""Tr. Lg blue"", ""TR.L.BLUE"", ""TR. LIGHT BLUE""]",True,True
+42,BL,16,"[""Trans-Neon Green""]",True,True
+42,BO,103,"[""Transparent Neon Green""]",True,True
+42,LD,42,"[""Trans_Neon_Green""]",True,True
+42,LE,49,"[""Tr. Flu. Green"", ""TR.FL.GREEN""]",True,True
+43,BL,113,"[""Trans-Aqua""]",True,True
+43,BO,25,"[""Transparent Very Light Blue""]",True,True
+43,LD,39,"[""Trans_Very_Light_Blue""]",True,True
+43,LE,229,"[""Transparent Light Bluish Green"", ""TR. LGH. BL. GR""]",True,True
+45,BL,50,"[""Trans-Dark Pink""]",True,True
+45,BO,99,"[""Transparent Dark Pink""]",True,True
+45,LD,37,"[""Trans_Dark_Pink""]",True,True
+45,LE,113,"[""Tr. Medi. reddish violet"", ""TR.ML.R.VIOL""]",True,True
+46,BL,19,"[""Trans-Yellow""]",True,True
+46,BO,109,"[""Transparent Yellow""]",True,True
+46,LD,46,"[""Trans_Yellow""]",True,True
+46,LE,44,"[""Tr. Yellow"", ""TR.YEL""]",True,True
+47,BL,12,"[""Trans-Clear""]",True,True
+47,BO,97,"[""Transparent""]",True,True
+47,LD,47,"[""Trans_Clear""]",True,True
+47,LE,40,"[""Transparent"", ""TR.""]",True,True
+52,BL,51,"[""Trans-Purple""]",True,True
+52,BO,107,"[""Transparent Purple""]",True,True
+52,LD,52,"[""Trans_Purple""]",True,True
+52,LE,126,"[""Tr. Bright bluish violet"", ""TR.KL.BL.VIO""]",True,True
+54,BL,121,"[""Trans-Neon Yellow""]",True,True
+54,BO,104,"[""Transparent Neon Yellow""]",True,True
+54,LD,54,"[""Trans_Neon_Yellow""]",True,True
+54,LE,157,"[""Transparent Fluorescent Yellow""]",True,True
+57,BL,18,"[""Trans-Neon Orange""]",True,True
+57,BO,161,"[""Transparent Neon Reddish Orange""]",True,True
+57,LD,38,"[""Trans_Neon_Orange""]",True,True
+57,LE,47,"[""Tr. Flu. Reddish orange"", ""TR.FL.REDORA""]",True,True
+60,BL,57,"[""Chrome Antique Brass""]",True,True
+60,BO,110,"[""Chrome Brass""]",True,True
+60,LD,60,"[""Chrome_Antique_Brass""]",True,True
+61,BL,52,"[""Chrome Blue""]",True,True
+61,BO,112,"[""Chrome Blue""]",True,True
+61,LD,61,"[""Chrome_Blue""]",True,True
+62,BL,64,"[""Chrome Green""]",True,True
+62,BO,113,"[""Chrome Green""]",True,True
+62,LD,62,"[""Chrome_Green""]",True,True
+63,BL,82,"[""Chrome Pink""]",True,True
+63,BO,114,"[""Chrome Pink""]",True,True
+63,LD,63,"[""Chrome_Pink""]",True,True
+64,BL,122,"[""Chrome Black""]",True,True
+64,BO,111,"[""Chrome Black""]",True,True
+64,LD,64,"[""Chrome_Black""]",True,True
+68,BL,96,"[""Very Light Orange""]",True,True
+68,BO,91,"[""Very Light Orange""]",True,True
+68,LD,68,"[""Very_Light_Orange""]",True,True
+68,LE,36,"[""Light Yellowish Orange""]",True,True
+69,BL,93,"[""Light Purple""]",True,True
+69,BO,69,"[""Light Purple""]",True,True
+69,LD,69,"[""Light_Purple""]",True,True
+69,LE,198,"[""Bright Reddish Lilac"", ""BR. RED. LILAC""]",True,True
+70,BL,88,"[""Reddish Brown""]",True,True
+70,BO,82,"[""Reddish Brown""]",True,True
+70,LD,70,"[""Reddish_Brown""]",True,True
+70,LE,192,"[""Reddish Brown"", ""RED. BROWN""]",True,True
+71,BL,86,"[""Light Bluish Gray""]",True,True
+71,BO,64,"[""Medium Stone Gray""]",True,True
+71,LD,71,"[""Light_Bluish_Gray""]",True,True
+71,LE,194,"[""Medium stone grey"", ""MED. ST-GREY""]",True,True
+72,BL,85,"[""Dark Bluish Gray""]",True,True
+72,BO,50,"[""Dark Stone Gray""]",True,True
+72,LD,72,"[""Dark_Bluish_Gray""]",True,True
+72,LE,199,"[""Dark stone grey"", ""DK. ST. GREY""]",True,True
+73,BL,42,"[""Medium Blue""]",True,True
+73,BO,14,"[""Medium Blue""]",True,True
+73,LD,73,"[""Medium_Blue""]",True,True
+73,LE,102,"[""Medium blue"", ""MD.BLUE""]",True,True
+74,BL,37,"[""Medium Green""]",True,True
+74,BO,10,"[""Medium Green""]",True,True
+74,LD,74,"[""Medium_Green""]",True,True
+74,LE,29,"[""Medium green"", ""MD.GREEN""]",True,True
+75,BL,116,"[""Speckle Black-Copper""]",True,True
+75,BO,133,"[""Speckle Black Copper""]",True,True
+75,LD,75,"[""Speckle_Black_Copper""]",True,True
+75,LE,306,"[""COP. DIF.""]",True,True
+76,BL,117,"[""Speckle DBGray-Silver""]",True,True
+76,BO,134,"[""Speckle Gray""]",True,True
+76,LD,76,"[""Speckle_Dark_Bluish_Gray_Silver""]",True,True
+76,LE,304,"[""CO. SILVER DIF""]",True,True
+77,BL,56,"[""Rose Pink""]",True,True
+77,BO,68,"[""Light Pink""]",True,True
+77,LD,77,"[""Light_Pink""]",True,True
+77,LE,223,"[""Light Pink""]",True,True
+77,LE,17,"[""Rose""]",True,True
+78,BL,90,"[""Light Nougat""]",True,True
+78,BO,65,"[""Light Flesh""]",True,True
+78,LD,78,"[""Light_Flesh""]",True,True
+78,LE,283,"[""Light Nougat"", ""L.NOUGAT""]",True,True
+79,BL,60,"[""Milky White""]",True,True
+79,BO,130,"[""Translucent White""]",True,True
+79,LD,79,"[""Milky_White""]",True,True
+79,LE,20,"[""Nature""]",True,True
+80,BL,67,"[""Metallic Silver""]",True,True
+80,BO,126,"[""Metallic Silver""]",True,True
+80,LD,80,"[""Metallic_Silver""]",True,True
+80,LE,298,"[""C.SILVER, DR. L""]",True,True
+80,LE,336,"[""SILVER INK""]",False,True
+81,BL,70,"[""Metallic Green""]",True,True
+81,BO,125,"[""Metallic Green""]",True,True
+81,LD,81,"[""Metallic_Green""]",True,True
+82,BL,65,"[""Metallic Gold""]",True,True
+82,BO,124,"[""Metallic Gold""]",True,True
+82,LD,82,"[""Metallic_Gold""]",True,True
+82,LE,299,"[""W.GOLD, DR.LA.""]",True,True
+82,LE,335,"[""GOLD INK""]",False,True
+84,BL,150,"[""Medium Nougat""]",True,True
+84,BO,74,"[""Medium Dark Flesh""]",True,True
+84,LD,84,"[""Medium_Nougat""]",True,True
+84,LE,312,"[""Medium Nougat"", ""M. NOUGAT""]",True,True
+85,BL,89,"[""Dark Purple""]",True,True
+85,BO,55,"[""Dark Purple""]",True,True
+85,LD,85,"[""Medium_Lilac""]",True,True
+85,LE,268,"[""Medium Lilac"", ""M. LILAC""]",True,True
+86,BL,91,"[""Light Brown""]",True,True
+86,BO,52,"[""Dark Flesh""]",True,True
+86,LD,86,"[""Light_Brown""]",True,True
+86,LE,217,"[""BROWN""]",True,True
+89,BL,97,"[""Royal Blue""]",True,True
+89,BO,40,"[""Royal Blue""]",True,True
+89,LD,89,"[""Blue_Violet""]",True,True
+89,LE,195,"[""R. BLUE""]",True,True
+92,BL,28,"[""Nougat""]",True,True
+92,BO,6,"[""Flesh""]",True,True
+92,LD,92,"[""Nougat""]",True,True
+92,LE,18,"[""Nougat""]",True,True
+100,BL,26,"[""Light Salmon""]",True,True
+100,BO,5,"[""Light Salmon""]",True,True
+100,LD,100,"[""Light_Salmon""]",True,True
+100,LE,100,"[""Light red""]",True,True
+110,BL,43,"[""Violet""]",True,True
+110,BO,15,"[""Violet""]",True,True
+110,LD,110,"[""Violet""]",True,True
+110,LE,110,"[""Bright Bluish Violet"", ""BR.BLUEVIOL""]",True,True
+112,BL,73,"[""Medium Violet""]",True,True
+112,BO,78,"[""Medium Violet""]",True,True
+112,LD,112,"[""Medium_Violet""]",True,True
+112,LE,112,"[""Medium Bluish Violet"", ""ML.BLUEVIOL""]",True,True
+112,LE,213,"[""Medium Royal Blue""]",True,True
+114,BL,100,"[""Glitter Trans-Dark Pink""]",True,True
+114,BO,132,"[""Transparent Pink Glitter""]",True,True
+114,LD,114,"[""Glitter_Trans_Dark_Pink""]",True,True
+114,LE,114,"[""Tr. Medium Reddish-Violet w. Glitter 2%"", ""TR.M.R.V.GLI""]",True,True
+115,BL,76,"[""Medium Lime""]",True,True
+115,BO,77,"[""Medium Lime""]",True,True
+115,LD,115,"[""Medium_Lime""]",True,True
+115,LE,115,"[""Med. yellowish green"", ""MD.YEL-GREEN""]",True,True
+117,BL,101,"[""Glitter Trans-Clear""]",True,True
+117,BO,131,"[""Transparent Glitter""]",True,True
+117,LD,117,"[""Glitter_Trans_Clear""]",True,True
+117,LE,122,"[""Nature with Glitter""]",True,True
+117,LE,117,"[""Transparent Glitter"", ""TR.W.GLITTER""]",True,True
+118,BL,41,"[""Aqua""]",True,True
+118,BO,13,"[""Aqua""]",True,True
+118,LD,118,"[""Aqua""]",True,True
+118,LE,118,"[""Light bluish green"", ""L.BLUE-GREEN""]",True,True
+120,BL,35,"[""Light Lime""]",True,True
+120,BO,67,"[""Light Lime""]",True,True
+120,LD,120,"[""Light_Lime""]",True,True
+120,LE,120,"[""Lig. yellowish green"", ""L.YEL-GREEN""]",True,True
+125,BL,32,"[""Light Orange""]",True,True
+125,BO,8,"[""Light Orange""]",True,True
+125,LD,125,"[""Light_Orange""]",True,True
+125,LE,121,"[""Medium Yellowish Orange""]",True,True
+129,BL,102,"[""Glitter Trans-Purple""]",True,True
+129,BO,22,"[""Transparent Purple Glitter""]",True,True
+129,LD,129,"[""Glitter_Trans_Purple""]",True,True
+129,LE,129,"[""Tr. Bright Bluish Violet w. Glitter 2%"", ""TR.BR.BL.V.G""]",True,True
+132,BL,111,"[""Speckle Black-Silver""]",True,True
+132,BO,24,"[""Speckle Black""]",True,True
+132,LD,132,"[""Speckle_Black_Silver""]",True,True
+132,LE,304,"[""CO. SILVER DIF""]",True,True
+133,BL,151,"[""Speckle Black-Gold""]",True,True
+133,BO,35,"[""Speckle Black Gold""]",True,True
+133,LD,133,"[""Speckle_Black_Gold""]",True,True
+133,LE,305,"[""Warm Gold, Diffuse""]",True,True
+134,BL,84,"[""Copper""]",True,True
+134,BO,116,"[""Copper""]",True,True
+134,LD,134,"[""Copper""]",True,True
+134,LE,139,"[""Copper""]",True,True
+135,BL,66,"[""Pearl Light Gray""]",True,True
+135,BO,122,"[""Pearl Light Gray""]",True,True
+135,LD,135,"[""Pearl_Light_Gray""]",True,True
+135,LE,131,"[""Silver""]",False,True
+135,LE,296,"[""Cool silver""]",False,True
+137,BL,78,"[""Pearl Sand Blue""]",True,True
+137,BO,118,"[""Metallic Blue""]",True,True
+137,LD,137,"[""Metal_Blue""]",True,True
+137,LE,145,"[""Sand blue metallic"", ""MET.SAND.BLU""]",True,True
+142,BL,61,"[""Pearl Light Gold""]",True,True
+142,BO,121,"[""Pearl Light Gold""]",True,True
+142,LD,142,"[""Pearl_Light_Gold""]",True,True
+142,LE,127,"[""Gold""]",True,True
+143,BL,74,"[""Trans-Medium Blue""]",True,True
+143,BO,102,"[""Transparent Medium Blue""]",True,True
+143,LD,41,"[""Trans_Medium_Blue""]",True,True
+143,LE,143,"[""Tr. Flu. Blue"", ""TR.FL. BLUE""]",True,True
+148,BL,77,"[""Pearl Dark Gray""]",True,False
+148,BO,119,"[""Pearl Dark Gray""]",True,True
+148,LD,148,"[""Pearl_Dark_Gray""]",False,True
+148,LE,148,"[""Mettalic Dark Grey"", ""MET.DK.GREY""]",False,True
+150,BL,119,"[""Pearl Very Light Gray""]",True,True
+150,BO,27,"[""Pearl Very Light Gray""]",True,True
+150,LD,150,"[""Pearl_Very_Light_Grey""]",True,True
+150,LE,150,"[""Metallic Light Gray""]",True,True
+151,BL,99,"[""Very Light Bluish Gray""]",True,True
+151,BO,90,"[""Light Stone Gray""]",True,True
+151,LD,151,"[""Very_Light_Bluish_Gray""]",True,True
+151,LE,208,"[""Light stone grey"", ""LGH. ST. GREY""]",True,True
+158,BL,158,"[""Yellowish Green""]",True,True
+158,BO,94,"[""Yellowish Green""]",True,True
+158,LD,326,"[""Yellowish_Green""]",True,True
+158,LE,326,"[""Spring Yellow Green"", ""SPR. YELL. GREE""]",True,True
+178,BL,81,"[""Flat Dark Gold""]",True,True
+178,BO,21,"[""Flat Dark Gold""]",True,True
+178,LD,178,"[""Pearl_Yellow""]",True,True
+178,LE,147,"[""Gold Metallic"", ""MET.SAND.YEL""]",True,True
+179,BL,95,"[""Flat Silver""]",True,True
+179,BO,117,"[""Flat Silver""]",True,True
+179,LD,179,"[""Pearl_Silver""]",True,True
+179,LE,315,"[""Silver Metallic"", ""SILVER MET.""]",True,True
+182,BL,98,"[""Trans-Orange""]",True,True
+182,BO,105,"[""Transparent Orange""]",True,True
+182,LD,57,"[""Trans_Orange""]",True,True
+182,LE,182,"[""Tr. Bright Orange"", ""TR. BR. ORANGE""]",True,True
+183,BL,83,"[""Pearl White""]",True,True
+183,BO,123,"[""Pearlescent""]",True,True
+183,LD,183,"[""Pearl_White""]",True,True
+183,LE,183,"[""Metallic White"", ""MET. WHITE""]",True,True
+191,BL,110,"[""Bright Light Orange""]",True,True
+191,BO,43,"[""Bright Light Orange""]",True,True
+191,LD,191,"[""Bright_Light_Orange""]",True,True
+191,LE,191,"[""Flame yellowish orange"", ""FL. YELL-ORA"", ""COMPD. FLAME YELLOWISH ORANGE""]",True,True
+212,BL,105,"[""Bright Light Blue""]",True,True
+212,BO,42,"[""Bright Light Blue""]",True,True
+212,LD,212,"[""Bright_Light_Blue""]",True,True
+212,LE,212,"[""Light Royal blue"", ""LGH. ROY. BLUE""]",True,True
+216,BL,27,"[""Rust""]",True,True
+216,BO,83,"[""Rust""]",True,True
+216,LD,216,"[""Rust""]",True,True
+226,BL,103,"[""Bright Light Yellow""]",True,True
+226,BO,44,"[""Bright Light Yellow""]",True,True
+226,LD,226,"[""Bright_Light_Yellow""]",True,True
+226,LE,226,"[""Cool Yellow"", ""COOL YEL."", ""COMPD. COOL YELLOW V.3""]",True,True
+230,BL,107,"[""Trans-Pink""]",True,True
+230,BO,106,"[""Transparent Pink""]",True,True
+230,LD,45,"[""Trans_Pink""]",True,True
+230,LE,230,"[""TR. BR. PURPLE""]",True,True
+232,BL,87,"[""Sky Blue""]",True,True
+232,BO,88,"[""Sky Blue""]",True,True
+232,LD,232,"[""Sky_Blue""]",True,True
+232,LE,232,"[""Dove blue"", ""DO. BLUE""]",True,True
+236,BL,114,"[""Trans-Light Purple""]",True,True
+236,BO,26,"[""Transparent Light Purple""]",True,True
+236,LD,44,"[""Trans_Light_Purple""]",True,True
+236,LD,284,"[""Trans_Light_Purple""]",False,True
+236,LE,284,"[""TR. RED-LILAC"", ""TR. RE-LILAC""]",True,True
+272,BL,63,"[""Dark Blue""]",True,True
+272,BO,48,"[""Dark Blue""]",True,True
+272,LD,272,"[""Dark_Blue""]",True,True
+272,LE,428,"[""Earth Blue V.3.""]",True,True
+272,LE,140,"[""Earth blue""]",True,True
+288,BL,80,"[""Dark Green""]",True,True
+288,BO,20,"[""Dark Green""]",True,True
+288,LD,288,"[""Dark_Green""]",True,True
+288,LE,490,[],False,True
+288,LE,141,"[""Earth Green"", ""EARTH GREEN""]",True,True
+294,BL,118,"[""Glow In Dark Trans""]",True,True
+294,BO,128,"[""Glow in the Dark Transparent""]",True,True
+294,LD,294,"[""Glow_In_Dark_Trans""]",True,True
+294,LE,294,"[""Phosphorescent Green"", ""PH.GREEN""]",True,True
+297,BL,115,"[""Pearl Gold""]",True,True
+297,BO,120,"[""Pearl Gold""]",True,True
+297,LD,297,"[""Pearl_Gold""]",True,True
+297,LE,297,"[""Warm Gold"", ""W.GOLD""]",True,True
+308,BL,120,"[""Dark Brown""]",True,True
+308,BO,51,"[""Dark Brown""]",True,True
+308,LD,308,"[""Dark_Brown""]",True,True
+308,LE,308,"[""Dark Brown"", ""DK. BROWN""]",True,True
+313,BL,72,"[""Maersk Blue""]",True,True
+313,BO,71,"[""Maersk Blue""]",True,True
+313,LD,313,"[""Maersk_Blue""]",True,True
+320,BL,59,"[""Dark Red""]",True,True
+320,BO,56,"[""Dark Red""]",True,True
+320,LD,320,"[""Dark_Red""]",True,True
+320,LE,154,"[""Dark red"", ""NEW DARK RED""]",True,True
+321,BL,153,"[""Dark Azure""]",True,True
+321,BO,47,"[""Dark Azure""]",True,True
+321,LD,321,"[""Dark_Azure""]",True,True
+321,LE,321,"[""Dark Azur""]",True,True
+322,BL,156,"[""Medium Azure""]",True,True
+322,BO,73,"[""Medium Azure""]",True,True
+322,LD,322,"[""Medium_Azure""]",True,True
+322,LE,491,[],False,True
+322,LE,322,"[""Medium Azure"", ""MEDIUM AZUR""]",True,True
+323,BL,152,"[""Light Aqua""]",True,True
+323,BO,62,"[""Light Aqua""]",True,True
+323,LD,323,"[""Light_Aqua""]",True,True
+323,LE,323,"[""Aqua""]",True,True
+326,BL,155,"[""Olive Green""]",True,True
+326,BO,79,"[""Olive Green""]",True,True
+326,LD,330,"[""Olive_Green""]",True,True
+326,LE,330,"[""Olive Green"", ""OLIVE GREEN""]",True,True
+334,BL,21,"[""Chrome Gold""]",True,True
+334,BO,2,"[""Chrome Gold""]",True,True
+334,LD,334,"[""Chrome_Gold""]",True,True
+334,LE,310,"[""Metalized Gold""]",True,True
+335,BL,58,"[""Sand Red""]",True,True
+335,BO,87,"[""Sand Red""]",True,True
+335,LD,335,"[""Sand_Red""]",True,True
+335,LE,153,"[""Sand red""]",True,True
+351,BL,94,"[""Medium Dark Pink""]",True,True
+351,BO,75,"[""Medium Dark Pink""]",True,True
+351,LD,351,"[""Medium_Dark_Pink""]",True,True
+351,LE,22,"[""Medium Reddish Violet"", ""MD.REDVIOL""]",True,True
+366,BL,29,"[""Earth Orange""]",True,True
+366,BO,59,"[""Earth Orange""]",True,True
+366,LD,366,"[""Earth_Orange""]",True,True
+366,LE,12,"[""L.ORABROWN""]",False,True
+373,BL,54,"[""Sand Purple""]",True,True
+373,BO,86,"[""Sand Purple""]",True,True
+373,LD,373,"[""Sand_Purple""]",True,True
+373,LE,136,"[""Sand violet""]",True,True
+378,BL,48,"[""Sand Green""]",True,True
+378,BO,18,"[""Sand Green""]",True,True
+378,LD,378,"[""Sand_Green""]",True,True
+378,LE,151,"[""Sand green""]",True,True
+379,BL,55,"[""Sand Blue""]",True,True
+379,BO,85,"[""Sand Blue""]",True,True
+379,LD,379,"[""Sand_Blue""]",True,True
+379,LE,135,"[""Sand blue""]",True,True
+383,BL,22,"[""Chrome Silver""]",True,True
+383,BO,115,"[""Chrome Silver""]",True,True
+383,LD,383,"[""Chrome_Silver""]",True,True
+383,LE,309,"[""Metalized Silver""]",True,True
+450,BL,106,"[""Fabuland Brown""]",True,True
+450,BO,23,"[""Fabuland Brown""]",True,True
+450,LD,450,"[""Fabuland_Brown""]",True,True
+450,LE,4,"[""Brick Red""]",True,True
+462,BL,31,"[""Medium Orange""]",True,True
+462,BO,7,"[""Medium Orange""]",True,True
+462,LD,462,"[""Medium_Orange""]",True,True
+462,LE,105,"[""Br. yellowish orange"", ""BR.YELORA""]",True,True
+484,BL,68,"[""Dark Orange""]",True,True
+484,BO,54,"[""Dark Orange""]",True,True
+484,LD,484,"[""Dark_Orange""]",True,True
+484,LE,38,"[""Dark Orange"", ""DK.ORA""]",True,True
+503,BL,49,"[""Very Light Gray""]",True,True
+503,BO,19,"[""Very Light Gray""]",True,True
+503,LD,503,"[""Very_Light_Gray""]",True,True
+503,LE,103,"[""Light grey""]",True,True
+1000,BL,159,"[""Glow in Dark White""]",True,True
+1000,BO,129,"[""Glow in the Dark White""]",True,True
+1000,LD,329,"[""Glow_In_Dark_White""]",True,True
+1000,LE,329,"[""WHITE GLOW""]",True,True
+1001,BL,245,"[""Lilac""]",True,True
+1001,BO,221,"[""Lilac""]",True,True
+1001,LD,112,"[""Medium_Violet""]",False,False
+1001,LD,219,"[""Lilac""]",True,True
+1001,LE,219,"[""Lilac""]",True,True
+1002,BL,163,"[""Glitter Trans-Neon Green""]",True,True
+1002,BO,167,"[""Transparent Neon Green Glitter""]",True,True
+1002,LD,339,"[""Glitter_Trans_Neon_Green""]",True,True
+1002,LE,339,"[""TR.FL.GRE W/GLI""]",True,True
+1003,BL,162,"[""Glitter Trans-Light Blue""]",True,True
+1003,BO,165,"[""Transparent Light Blue Glitter""]",True,True
+1003,LD,302,"[""Glitter_Trans_Light_Blue""]",True,True
+1003,LE,302,"[""PCTR LI.BLUE W/"", ""TR LI.BLUE W/""]",True,True
+1004,BL,164,"[""Trans Light Orange""]",True,True
+1004,BO,171,"[""Transparent Light Orange""]",True,True
+1004,LD,231,"[""Trans_Bright_Light_Orange""]",True,True
+1004,LE,231,"[""TR. FL. YEL ORA""]",True,True
+1005,BO,162,"[""Transparent Fire Yellow""]",True,True
+1005,LD,234,"[""Trans_Fire_Yellow""]",True,True
+1005,LE,234,"[""TR. FIRE YELL""]",True,True
+1006,BO,163,"[""Transparent Light Royal Blue""]",True,True
+1006,LD,293,"[""Trans_Light_Blue_Violet""]",True,True
+1006,LE,293,"[""TR. L.ROYAL BLUE"", ""TR.L.ROYAL BLUE""]",True,True
+1007,BL,227,"[""Clikits Lavender""]",True,True
+1007,BO,223,"[""Very Light Purple""]",True,True
+1007,LD,218,"[""Reddish_Lilac""]",True,True
+1007,LE,218,"[""RED. LILAC""]",True,True
+1012,BL,160,"[""Fabuland Orange""]",True,True
+1012,BO,60,"[""Fabuland Orange""]",True,True
+1012,LD,509,"[""Fabuland_Orange""]",True,True
+1012,LE,19,"[""Light Brown""]",True,True
+1013,BL,123,"[""Mx White""]",True,True
+1013,BO,154,"[""Modulex White""]",True,True
+1013,LD,30001,"[""Modulex_White""]",True,True
+1014,BL,124,"[""Mx Light Bluish Gray""]",True,True
+1014,BO,28,"[""Modulex Medium Stone Gray""]",True,True
+1014,LD,30032,"[""Modulex_Light_Bluish_Grey""]",True,True
+1015,BL,125,"[""Mx Light Gray""]",True,True
+1015,BO,141,"[""Modulex Light Gray""]",True,True
+1015,LD,30002,"[""Modulex_Light_Grey""]",True,True
+1016,BL,126,"[""Mx Charcoal Gray""]",True,True
+1016,BO,29,"[""Modulex Charcoal Gray""]",True,True
+1016,LD,30040,"[""Modulex_Charcoal_Grey""]",True,True
+1017,BL,127,"[""Mx Tile Gray""]",True,True
+1017,BO,152,"[""Modulex Tile Gray""]",True,True
+1017,LD,31000,"[""Modulex_Dark_Grey""]",True,True
+1018,BL,128,"[""Mx Black""]",True,True
+1018,BO,136,"[""Modulex Black""]",True,True
+1018,LD,30003,"[""Modulex_Black""]",True,True
+1019,BL,131,"[""Mx Tile Brown""]",True,True
+1019,BO,151,"[""Modulex Tile Brown""]",True,True
+1019,LD,30054,"[""Modulex_Dark_Brown""]",True,True
+1020,BL,134,"[""Mx Terracotta""]",True,True
+1020,BO,150,"[""Modulex Terracotta""]",True,True
+1020,LD,30004,"[""Modulex_Terracotta""]",True,True
+1021,BL,132,"[""Mx Brown""]",True,True
+1021,BO,137,"[""Modulex Brown""]",True,True
+1021,LD,30009,"[""Modulex_Brown""]",True,True
+1022,BL,133,"[""Mx Buff""]",True,True
+1022,BO,138,"[""Modulex Buff""]",True,True
+1022,LD,30005,"[""Modulex_Buff""]",True,True
+1023,BL,129,"[""Mx Red""]",True,True
+1023,BO,148,"[""Modulex Red""]",True,True
+1023,LD,30010,"[""Modulex_Strong_Red""]",True,True
+1024,BL,130,"[""Mx Pink Red""]",True,True
+1024,BO,147,"[""Modulex Pink Red""]",True,True
+1024,LD,30033,"[""Modulex_Pink_Red""]",True,True
+1025,BL,135,"[""Mx Orange""]",True,True
+1025,BO,30,"[""Modulex Orange""]",True,True
+1025,LD,30012,"[""Modulex_Orange""]",True,True
+1026,BL,136,"[""Mx Light Orange""]",True,True
+1026,BO,142,"[""Modulex Light Orange""]",True,True
+1026,LD,30039,"[""Modulex_Light_Orange""]",True,True
+1027,BL,137,"[""Mx Light Yellow""]",True,True
+1027,BO,143,"[""Modulex Light Yellow""]",True,True
+1027,LD,30035,"[""Modulex_Light_Yellow""]",True,True
+1028,BL,138,"[""Mx Ochre Yellow""]",True,True
+1028,BO,31,"[""Modulex Ochre Yellow""]",True,True
+1028,LD,30006,"[""Modulex_Ochre_Yellow""]",True,True
+1029,BL,139,"[""Mx Lemon""]",True,True
+1029,BO,140,"[""Modulex Lemon""]",True,True
+1029,LD,30015,"[""Modulex_Lemon""]",True,True
+1030,BL,141,"[""Mx Pastel Green""]",True,True
+1030,BO,33,"[""Modulex Pastel Green""]",True,True
+1030,LD,30014,"[""Modulex_Pastel_Green""]",True,True
+1031,BL,140,"[""Mx Olive Green""]",True,True
+1031,BO,32,"[""Modulex Olive Green""]",True,True
+1031,LD,30007,"[""Modulex_Olive_Green""]",True,True
+1032,BL,142,"[""Mx Aqua Green""]",True,True
+1032,BO,135,"[""Modulex Aqua Green""]",True,True
+1032,LD,30034,"[""Modulex_Aqua_Green""]",True,True
+1033,BL,146,"[""Mx Teal Blue""]",True,True
+1033,BO,149,"[""Modulex Teal Blue""]",True,True
+1033,LD,30008,"[""Modulex_Teal_Blue""]",True,True
+1034,BL,143,"[""Mx Tile Blue""]",True,True
+1034,BO,34,"[""Modulex Tile Blue""]",True,True
+1034,LD,31001,"[""Modulex_Blue""]",True,True
+1035,BL,144,"[""Mx Medium Blue""]",True,True
+1035,BO,144,"[""Modulex Medium Blue""]",True,True
+1035,LD,30038,"[""Modulex_Medium_Blue""]",True,True
+1036,BL,145,"[""Mx Pastel Blue""]",True,True
+1036,BO,145,"[""Modulex Pastel Blue""]",True,True
+1036,LD,30011,"[""Modulex_Pastel_Blue""]",True,True
+1037,BL,147,"[""Mx Violet""]",True,True
+1037,BO,153,"[""Modulex Violet""]",True,True
+1037,LD,30037,"[""Modulex_Violet""]",True,True
+1038,BL,148,"[""Mx Pink""]",True,True
+1038,BO,146,"[""Modulex Pink""]",True,True
+1038,LD,30016,"[""Modulex_Pink""]",True,True
+1039,BL,149,"[""Mx Clear""]",True,True
+1039,BO,139,"[""Modulex Clear""]",True,True
+1039,LD,30000,"[""Modulex_Clear""]",True,True
+1040,BL,210,"[""Mx Foil Dark Gray""]",True,True
+1040,LD,30082,"[""Modulex_Foil_Dark_Grey""]",True,True
+1041,BL,211,"[""Mx Foil Light Gray""]",True,True
+1041,LD,30083,"[""Modulex_Foil_Light_Grey""]",True,True
+1042,BL,212,"[""Mx Foil Dark Green""]",True,True
+1042,LD,30084,"[""Modulex_Foil_Dark_Green""]",True,True
+1043,BL,213,"[""Mx Foil Light Green""]",True,True
+1043,LD,30085,"[""Modulex_Foil_Light_Green""]",True,True
+1044,BL,214,"[""Mx Foil Dark Blue""]",True,True
+1044,LD,30086,"[""Modulex_Foil_Dark_Blue""]",True,True
+1045,BL,215,"[""Mx Foil Light Blue""]",True,True
+1045,LD,30087,"[""Modulex_Foil_Light_Blue""]",True,True
+1046,BL,216,"[""Mx Foil Violet""]",True,True
+1046,LD,30088,"[""Modulex_Foil_Violet""]",True,True
+1047,BL,217,"[""Mx Foil Red""]",True,True
+1047,LD,30089,"[""Modulex_Foil_Dark_Red""]",True,True
+1048,BL,218,"[""Mx Foil Yellow""]",True,True
+1048,LD,30090,"[""Modulex_Foil_Yellow""]",True,True
+1049,BL,219,"[""Mx Foil Orange""]",True,True
+1049,LD,30091,"[""Modulex_Foil_Orange""]",True,True
+1050,BL,220,"[""Coral""]",True,True
+1050,BO,173,"[""Coral""]",True,True
+1050,LD,353,"[""Coral""]",True,True
+1050,LE,353,"[""Coral"", ""Vibrant Coral""]",True,True
+1051,BL,72,"[""Maersk Blue""]",True,False
+1051,BO,71,"[""Maersk Blue""]",True,False
+1051,LE,11,"[""Pastel Blue"", ""PASTBLU""]",True,True
+1052,BL,222,"[""Glitter Trans-Orange""]",True,True
+1052,BO,179,"[""Transparent Orange with Glitter""]",True,True
+1052,LD,341,"[""Glitter_Trans_Orange""]",True,True
+1052,LE,341,"[""TR.BR:ORA W/GLI""]",True,True
+1053,BL,223,"[""Satin Trans-Light Blue""]",True,True
+1053,BO,175,"[""Transparent Blue Opal""]",True,True
+1053,LD,362,"[""Opal_Trans_Light_Blue""]",True,True
+1053,LE,362,"[""Transparent Blue Opal"", ""TR.BLUE OPAL""]",True,True
+1054,BL,224,"[""Satin Trans-Dark Pink""]",True,True
+1054,BO,199,"[""Transparent Dark Pink Opal""]",True,True
+1054,LD,364,"[""Opal_Trans_Dark_Pink""]",True,True
+1054,LE,364,"[""Transparent Medium Reddish Violet with Opalescence"", ""Tr.M.Violet Opa""]",True,True
+1055,BL,228,"[""Satin White""]",True,True
+1055,BO,193,"[""Transparent Opal""]",True,True
+1055,LD,360,"[""Opal_Trans_Clear""]",True,True
+1055,LE,360,"[""Transparent with Opalescence"", ""Tr. Opalescence""]",True,True
+1056,BL,229,"[""Satin Trans-Black""]",True,True
+1056,BO,201,"[""Transparent Black Opal""]",True,True
+1056,LD,363,"[""Opal_Trans_Black""]",True,True
+1056,LE,363,"[""Transparent Brown With Opalescence""]",True,True
+1057,BL,226,"[""Trans-Light Bright Green""]",True,True
+1057,BO,205,"[""Transparent Light Bright Green""]",True,True
+1057,LD,227,"[""Trans_Bright_Light_Green""]",True,True
+1057,LE,227,"[""Transparent Bright Yellowish Green"", ""TR. BR. YEL GR""]",True,True
+1058,BL,221,"[""Trans-Light Green""]",True,True
+1058,BO,191,"[""Transparent Light Green""]",True,True
+1058,LD,285,"[""TranS_Light_Green""]",True,True
+1058,LE,285,"[""Transparent Light Green""]",True,True
+1059,BL,230,"[""Satin Trans-Purple""]",True,True
+1059,BO,203,"[""Transparent Purple Opal""]",True,True
+1059,LD,365,"[""Opal_Trans_Purple""]",True,True
+1059,LE,365,"[""Tr.Violet Opal""]",True,True
+1060,BL,233,"[""Satin Trans-Bright Green""]",True,True
+1060,BO,207,"[""Transparent Green Opal""]",True,True
+1060,LD,367,"[""Opal_Trans_Green""]",True,True
+1060,LE,367,"[""Transparent Green With Opalescence""]",True,True
+1061,BL,232,"[""Satin Trans-Dark Blue""]",True,True
+1061,BO,209,"[""Transparent Dark Blue Opal""]",True,True
+1061,LD,10366,"[""Opal_Trans_Dark_Blue""]",True,True
+1061,LE,366,"[""Transparent Blue With Opalescence""]",True,True
+1062,BL,236,"[""Neon Yellow""]",True,True
+1062,BO,211,"[""Vibrant Yellow""]",True,True
+1062,LD,368,"[""Vibrant_Yellow""]",True,True
+1062,LE,368,"[""Vibrant Yellow""]",True,True
+1063,BL,249,"[""Reddish Copper""]",True,True
+1063,BO,227,"[""Reddish Copper""]",True,True
+1063,LD,346,"[""Reddish_Copper""]",True,True
+1063,LE,346,"[""Copper Metallic""]",False,True
+1064,LD,508,"[""Fabuland_Red""]",True,True
+1064,LE,13,"[""Red Orange""]",True,True
+1065,BL,235,"[""Reddish Gold""]",True,True
+1065,BO,215,"[""Reddish Gold""]",True,True
+1065,LD,189,"[""Reddish_Gold""]",True,True
+1065,LE,189,"[""Reddish Gold"", ""Gold Metallic""]",True,True
+1066,BL,161,"[""Dark Yellow""]",True,True
+1066,BO,169,"[""Curry""]",True,True
+1066,LD,180,"[""Dark_Yellow""]",True,True
+1066,LE,180,"[""Curry""]",False,True
+1067,BL,225,"[""Dark Nougat""]",True,True
+1067,BO,160,"[""Dark Nougat""]",True,True
+1067,LD,128,"[""Dark_Nougat""]",False,True
+1067,LE,128,"[""Dark Nougat"", ""DARK NOUGAT""]",True,True
+1068,BL,231,"[""Dark Salmon""]",True,True
+1068,BO,158,"[""Bright Reddish Orange""]",False,True
+1068,LD,123,"[""Dark_Salmon""]",True,True
+1068,LE,123,"[""Bright Reddish Orange""]",True,True
+1069,BL,252,"[""Pearl Red""]",True,True
+1069,BO,181,"[""Pearl Red""]",True,True
+1069,LD,184,"[""Metallic_Bright_Red""]",False,True
+1069,LE,184,"[""Metallic Bright Red"", ""MET. BR. RED""]",False,True
+1070,BL,254,"[""Pearl Blue""]",True,True
+1070,BO,189,"[""Pearl Blue""]",True,True
+1070,LD,185,"[""Metallic_Bright_Blue""]",True,True
+1070,LE,185,"[""Metallic Bright Blue"", ""MET. BR. BLUE""]",False,True
+1071,BL,253,"[""Pearl Green""]",True,True
+1071,BO,183,"[""Pearl Green""]",True,True
+1071,LD,186,"[""Metallic_Dark_Green""]",False,True
+1071,LE,186,"[""Metallic Dark Green"", ""MET. DK. GREEN""]",False,True
+1072,BL,255,"[""Pearl Brown""]",True,True
+1072,BO,219,"[""Pearl Brown""]",True,True
+1072,LD,187,"[""Pearl_Brown""]",True,True
+1072,LE,187,"[""Metallic Earth Orange"", ""MET. EAR.ORA""]",False,True
+1073,BL,244,"[""Pearl Black""]",True,True
+1073,BO,185,"[""Pearl Black""]",True,True
+1073,LD,83,"[""Pearl_Black""]",True,True
+1073,LE,149,"[""Metallic Black"", ""MET.BLACK""]",False,True
+1074,BL,247,"[""Little Robots Blue""]",True,True
+1074,LE,188,"[""Tiny Blue""]",True,True
+1075,LE,269,"[""Tiny-Medium Blue""]",True,True
+1076,BL,171,"[""Lemon""]",True,True
+1076,BO,67,"[""Light Lime""]",True,False
+1076,LD,10015,"[""Lemon""]",True,True
+1076,LE,15,"[""Lemon""]",True,True
+1077,BL,248,"[""Fabuland Lime""]",True,True
+1077,LD,510,"[""Fabuland_Pastel_Green""]",True,True
+1077,LE,14,"[""Pastel Green""]",True,True
+1078,LE,210,"[""Faded Green""]",True,True
+1079,LE,233,"[""Light Faded Green""]",True,True
+1080,LE,224,"[""Light Brick Yellow""]",True,True
+1081,BO,83,"[""Rust""]",True,False
+1081,LD,216,"[""Rust""]",True,True
+1081,LE,216,"[""Rust""]",True,True
+1082,LD,295,"[""Flamingo_Pink""]",True,True
+1082,LE,295,"[""Flamingo Pink""]",True,True
+1083,BL,237,"[""Bionicle Copper""]",True,True
+1083,BO,233,"[""Bionicle Copper""]",True,True
+1083,LD,176,"[""Pearl_Red""]",True,True
+1083,LE,176,"[""Red Flip/Flop""]",False,True
+1084,BL,238,"[""Bionicle Gold""]",True,True
+1084,BO,231,"[""Bionicle Gold""]",True,True
+1084,LD,178,"[""Pearl_Yellow""]",True,True
+1084,LE,178,"[""Yellow Flip/Flop""]",False,True
+1085,BL,239,"[""Bionicle Silver""]",True,True
+1085,BO,229,"[""Bionicle Silver""]",True,True
+1085,LD,179,"[""Pearl_Silver""]",True,True
+1085,LE,179,"[""Silver Flip/Flop""]",True,True
+1086,BO,125,"[""Metallic Green""]",True,False
+1086,LD,200,"[""Lemon_Metallic""]",True,True
+1086,LE,200,"[""Lemon Metallic""]",True,True
+1087,LE,16,"[""Pink""]",True,True
+1088,BL,240,"[""Medium Brown""]",True,True
+1088,BO,213,"[""Medium Brown""]",True,True
+1088,LD,370,"[""Medium_Brown""]",True,True
+1088,LE,370,"[""Medium Brown""]",True,True
+1089,BL,241,"[""Medium Tan""]",True,True
+1089,BO,217,"[""Warm Tan""]",True,True
+1089,LD,371,"[""Medium_Tan""]",True,True
+1089,LE,371,"[""Warm Tan""]",True,True
+1091,BL,172,"[""Warm Yellowish Orange""]",True,True
+1091,BO,8,"[""Light Orange""]",True,False
+1091,LD,225,"[""Warm_Yellowish_Orange""]",True,True
+1091,LE,225,"[""Warm Yellowish Orange""]",True,True
+1092,BL,250,"[""Metallic Copper""]",True,True
+1092,BO,225,"[""Metallic Copper""]",True,True
+1092,LD,300,"[""Metallic_Copper""]",True,True
+1092,LE,334,"[""COPPER INK""]",True,True
+1092,LE,300,"[""COPPER, DR.LA.""]",True,True
+1093,BL,246,"[""Light Lilac""]",True,True
+1093,BO,16,"[""Light Violet""]",True,False
+1093,LD,220,"[""Light_Lilac""]",True,True
+1093,LE,220,"[""Light Lilac""]",True,True
+1094,BL,234,"[""Trans-Medium Purple""]",True,True
+1094,BO,107,"[""Transparent Purple""]",True,False
+1094,LD,284,"[""Trans_Reddish_Lilac""]",True,True
+1094,LE,236,"[""Transparent Bright Reddish Lilac""]",True,True
+1095,BL,251,"[""Trans-Black (2023)""]",True,True
+1095,BO,235,"[""Transparent Black (New)""]",True,True
+1095,LD,10375,"[""Trans_Black""]",True,True
+1095,LE,375,"[""Tr. Black""]",True,True
+1096,LD,10351,"[""Glitter_Trans_Bright_Green""]",True,True
+1096,LE,351,"[""Transparent Bright Green w/ Glitter""]",True,True
+1097,LE,303,"[""Trans Br Reddish Lilac w/ Glitter""]",True,True
+1098,LE,175,"[""Transparent Green with Glitter""]",True,True
+1098,LE,155,"[""Transparent Green with Glitter""]",True,True
+1099,LE,301,"[""Trans Bright Purple w/ Glitter""]",True,True
+1100,BO,93,"[""Yellow""]",True,False
+1100,LE,190,"[""Fire Yellow""]",True,True
+1101,LE,197,"[""Bright Lilac""]",True,True
+1102,LD,158,"[""Trans_Neon_Red""]",True,True
+1102,LE,158,"[""Transparent Fluorescent Red""]",True,True
+1103,BL,77,"[""Pearl Dark Gray""]",True,True
+1103,BO,119,"[""Pearl Dark Gray""]",True,False
+1103,LD,87,"[""Metallic_Dark_Gray""]",True,True
+1103,LE,316,"[""Titanium Metallic"", ""TITAN. METAL.""]",True,True
+1136,BL,167,"[""Reddish Orange""]",True,True
+1136,BO,241,"[""Reddish Orange""]",True,True
+1136,LD,402,"[""Reddish_Orange""]",True,True
+1136,LE,402,"[""Red. Orange""]",True,True
+1137,BL,169,"[""Sienna""]",True,True
+1137,BO,245,"[""Sienna Brown""]",True,True
+1137,LD,422,"[""Sienna_Brown""]",True,True
+1137,LE,422,"[""Sienna Brown""]",True,True
+1138,BL,168,"[""Umber""]",True,True
+1138,BO,243,"[""Umber Brown""]",True,True
+1138,LD,423,"[""Umber_Brown""]",True,True
+1138,LE,423,"[""Umber Brown""]",True,True
+1139,BL,170,"[""Satin Trans-Yellow""]",True,True
+1139,BO,247,"[""Transparent Yellow Opal""]",True,True
+1139,LD,376,"[""Opal_Trans_Yellow""]",True,True
+1139,LE,376,"[""Tr. Yellow Opal""]",True,True
+1140,BL,165,"[""Neon Orange""]",True,True
+1140,LE,133,"[""Neon Orange""]",True,True
+1141,BL,166,"[""Neon Green""]",True,True
+1141,LE,134,"[""Neon Green""]",True,True
+1142,BL,242,"[""Dark Olive Green""]",True,True
+1142,LE,144,"[""Dark Army Green""]",True,True
+1143,LE,122,"[""Nature with Glitter""]",True,True
+1145,BL,173,"[""Ochre Yellow""]",True,True
+1145,BO,255,"[""Ochre Yellow""]",True,True
+1145,LD,424,"[""Ochre_Yellow""]",True,True
+1145,LE,424,"[""Ochre Yellow""]",True,True
+1146,BL,175,"[""Warm Pink""]",True,True
+1146,BO,259,"[""Warm Pink""]",True,True
+1146,LD,430,"[""Warm_Pink""]",True,True
+1146,LE,430,"[""Warm Pink""]",True,True
+1147,BL,174,"[""Blue Violet""]",True,True
+1147,BO,257,"[""Blue Violet""]",True,True
+1147,LD,431,"[""Bright_Blue_Violet""]",True,True
+1147,LE,431,"[""Blue Violet""]",True,True
+9999,BL,0,"[""(Not Applicable)""]",True,True
