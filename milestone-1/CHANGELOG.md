@@ -19,6 +19,26 @@ Turned the starter seed script into a FastAPI website with a reusable MySQL laye
 - MySQL healthcheck; schema mounted into `docker-entrypoint-initdb.d`.
 - Importer service mounts `data/` and must finish before the web app starts.
 
+### Next.js frontend (`web/`)
+- Added a Next.js (App Router, TypeScript, Tailwind) frontend on port 3000.
+- Pages: overview (`/`), set search (`/sets`), set detail (`/sets/[setNum]`), theme list (`/themes`), and theme detail (`/themes/[id]`).
+- Set search filters by name/set number/theme, theme, year range, and piece range, with five sort orders and pagination. Filters live in the URL, so searches can be shared.
+- Overview and theme pages show totals, a sets-per-year chart, top themes, and the biggest sets.
+- `web/lib/api.ts` is a typed client for the API. Pages fetch from FastAPI on the server using `API_URL`, so the browser never calls the API directly.
+
+### API
+- `/api/sets` now accepts `theme_id` (includes direct subthemes), `year_min`, `year_max`, `parts_min`, `parts_max`, `sort`, `limit`, and `offset`, and returns a `total` count. Unknown sort values return 400.
+- Added `/api/sets/{set_num}` (set, theme chain, up to 8 related sets; 404 if missing).
+- Added `/api/themes` (set counts and year range per theme, optional `q`) and `/api/themes/{id}` (stats, subthemes, sets per year).
+- Added `/api/stats` (catalogue totals, sets per year, top 10 themes, 10 biggest sets).
+- All filter values are passed as query parameters; sort orders come from a fixed whitelist.
+
+### Docker and fixes
+- Added a `web` Compose service built from `web/Dockerfile` (Next.js standalone output), with `API_URL=http://app:8000`.
+- Fixed `app.py` and the `Dockerfile` to load `index.html` from `src/` instead of the missing `templates/` folder.
+- Added `web/` to `.dockerignore` so the backend image does not copy `node_modules`.
+- Documented the frontend and the API endpoints in the README.
+
 
 
 
