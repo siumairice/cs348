@@ -70,3 +70,10 @@ Hardened the starter app so Compose starts cleanly after a volume wipe and does 
 
 ### Schema cleanup (`app.py`)
 - Removed `DROP TABLE IF EXISTS users` on every run so a future `users` table is not wiped.
+
+### Sample SQL queries (`db/test-sample.sql`)
+- Added queries to find sets containing a specified part and color, browse sets by theme and minimum part count, check whether a user owns enough parts to build a set, and list a user's completed sets.
+
+### Repository hygiene (`.gitignore`)
+- Ignore local `.env` files while allowing `.env.example` to be shared safely.
+- Ignore Python bytecode/cache files, common virtual-environment directories, and macOS `.DS_Store` files.
