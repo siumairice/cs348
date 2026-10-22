@@ -17,9 +17,13 @@ db/
   import_sample.py     loads Rebrickable CSVs into MySQL
   test-sample.sql      sample query
   test-sample.out      expected result
-templates/
+src/
   index.html           search page
 data/                  Rebrickable CSV downloads
+milestone-0/           contains changelog for each milestone
+milestone-1/
+milestone-2/
+milestone-3/
 ```
 
 ## Prerequisites
@@ -52,7 +56,7 @@ MySQL is available on host port **3307** (mapped from container 3306) so it does
 With the stack running:
 
 ```bash
-docker compose exec -T db mysql -uroot -pcs348pass --table lego_sets < db/test-sample.sql
+docker compose exec -T db mysql -uroot -pcs348pass --batch --raw lego_sets < db/test-sample.sql
 ```
 
 Compare the output to `db/test-sample.out`.
