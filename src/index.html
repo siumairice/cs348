@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LEGO Sets Explorer</title>
+</head>
+<body>
+    <h1>LEGO Sets Explorer</h1>
+
+    <form id="search-form">
+        <input id="query" type="search" placeholder="Search LEGO sets">
+        <button type="submit">Search</button>
+    </form>
+
+    <p id="status"></p>
+    <ul id="results"></ul>
+
+    <footer>
+        LEGO data sourced from
+        <a href="https://rebrickable.com/">Rebrickable</a>.
+    </footer>
+
+    <script>
+        const form = document.getElementById("search-form");
+        const query = document.getElementById("query");
+        const results = document.getElementById("results");
+        const status = document.getElementById("status");
+
+        async function searchSets() {
+            status.textContent = "Loading...";
+            results.replaceChildren();
+
+            try {
+                const params = new URLSearchParams({
+                    q: query.value
+                });
+
+                const response = await fetch(`/api/sets?${params}`);
+                if (!response.ok) throw new Error("Request failed");
+
+                const data = await response.json();
+
+                for (const set of data.sets) {
+                    const item = document.createElement("li");
+                    item.textContent =
+                        `${set.name} (${set.year}) — ` +
+                        `${set.num_parts ?? "Unknown"} pieces — ` +
+                        `${set.theme_name ?? "No theme"} [${set.set_num}]`;
+                    results.appendChild(item);
+                }
+
+                status.textContent =
+                    `${data.sets.length} sets found`;
+            } catch {
+                status.textContent = "Could not load sets.";
+            }
+        }
+
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+            searchSets();
+        });
+
+        searchSets();
+    </script>
+</body>
+</html>
