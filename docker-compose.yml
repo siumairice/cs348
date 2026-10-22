@@ -8,31 +8,18 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: cs348pass
       MYSQL_DATABASE: lego_sets
-    command:
-      - --local-infile=1
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_0900_ai_ci
+    command: --local-infile=1
     ports:
       - "3307:3306"
     volumes:
       - cs348_mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pcs348pass"]
-      interval: 5s
-      timeout: 5s
-      retries: 120
-      start_period: 20s
   app:
     build: .
     container_name: cs348-lego-app
-    environment:
-      PYTHONUNBUFFERED: "1"
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     volumes:
       - ./data:/data:ro
-    command: ["sh", "-c", "python sql/import.py && python app.py"]
 
 volumes:
   cs348_mysql_data:
