@@ -1,2 +1,15 @@
 __pycache__/
-*.pyc
+*.py[cod]
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# macOS
+.DS_Store
