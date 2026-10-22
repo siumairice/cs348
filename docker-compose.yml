@@ -9,7 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: cs348pass
       MYSQL_DATABASE: lego_sets
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - cs348_mysql_data:/var/lib/mysql
   app:

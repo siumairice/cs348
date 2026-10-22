@@ -1,5 +1,8 @@
 # CS348 Project
 
+## Organization
+The entire application lives in the root. Each milestone folder contains a changelog of what was updated for that particular milestone. 
+
 ## Prerequisites
 - Docker Desktop
 
@@ -14,8 +17,7 @@ docker compose up --build
 ### 2. Verify the Output
 
 ```text
-cs348-lego-app  | Waiting 10 seconds for the database to boot...
-cs348-lego-app  | Successfully connected to the database!
+cs348-lego-app  | Successfully connected to the database! (attempt 1)
 cs348-lego-app  | 
 cs348-lego-app  |             SELECT s.set_num, s.name AS set_name, s.year, t.name AS theme_name
 cs348-lego-app  |             FROM sets s
