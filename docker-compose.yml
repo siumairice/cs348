@@ -12,11 +12,44 @@ services:
       - "3307:3306"
     volumes:
       - cs348_mysql_data:/var/lib/mysql
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pcs348pass"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+  importer:
+    build: .
+    container_name: cs348-lego-importer
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: cs348pass
+      DB_NAME: lego_sets
+      DATA_DIR: /data
+    volumes:
+      - ./data:/data:ro
+    command: python db/import_sample.py
+    restart: "no"
   app:
     build: .
     container_name: cs348-lego-app
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      importer:
+        condition: service_completed_successfully
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: cs348pass
+      DB_NAME: lego_sets
 
 volumes:
   cs348_mysql_data:

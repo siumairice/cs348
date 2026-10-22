@@ -1,5 +1,24 @@
 ## Milestone 1
 
+Turned the starter seed script into a FastAPI website with a reusable MySQL layer and real Rebrickable data.
+
+### Website and API
+- Replaced `app.py` with a FastAPI app served by Uvicorn on port 8000.
+- Added `templates/index.html`, a search page that calls `/api/sets`.
+- `/api/sets?q=` searches set name, theme, and parent theme and returns up to 50 rows (`num_parts` included).
+- Interactive docs are at `/docs`.
+
+### Database
+- Added `database.py` with the existing retry loop and env-based MySQL settings.
+- Added `db/schema.sql`: `themes` (`id`, `name`, `parent_id`) and `sets` (`set_num`, `name`, `year`, `theme_id`, `num_parts`, `img_url`).
+- Added `db/import_sample.py` to load `data/themes.csv` and `data/sets.csv`. Import runs as a one-shot Compose service, not on every web request.
+- Added `db/test-sample.sql` and `db/test-sample.out` for three known sets (Rivendell, Millennium Falcon, X-Wing).
+
+### Docker
+- App command is now `uvicorn app:app --host 0.0.0.0 --port 8000`, with `8000:8000` published.
+- MySQL healthcheck; schema mounted into `docker-entrypoint-initdb.d`.
+- Importer service mounts `data/` and must finish before the web app starts.
+
 
 
 
