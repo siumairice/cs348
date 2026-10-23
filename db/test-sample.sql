@@ -30,6 +30,7 @@ WHERE
     t.name = 'Space'
     AND s.num_parts >= 10
 ORDER BY
+    t.name,
     s.num_parts ASC,
     s.set_num;
 
