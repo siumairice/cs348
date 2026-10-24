@@ -13,8 +13,8 @@ requirements.txt
 Dockerfile
 docker-compose.yml
 db/
-  schema.sql           themes and sets tables
-  import_sample.py     loads Rebrickable CSVs into MySQL
+  schema.sql           Rebrickable and user-related tables
+  import_sample.py     loads the Rebrickable CSVs into MySQL
   test-sample.sql      sample query
   test-sample.out      expected result
 src/
@@ -43,7 +43,11 @@ From the project root:
 docker compose up --build
 ```
 
-MySQL is initialized from `db/schema.sql`. The importer loads Rebrickable themes and sets once the database is healthy. The API and the Next.js frontend then start.
+MySQL is initialized from `db/schema.sql`. The importer loads the Rebrickable sample tables once the database is healthy. The API and the Next.js frontend then start.
+
+The importer loads the small sample CSVs from `data/subset/`; it does not load the full dataset in `data/`. Git LFS is not needed for this sample import.
+
+The `lego_sets` database also contains `users`, `user_parts`, and `user_completed_sets`. The sample SQL script seeds a demo user and example user data before running its user-related queries.
 
 ### 2. Open the website
 
@@ -75,7 +79,7 @@ It reads `API_URL` (default `http://localhost:8000`). Pages fetch from FastAPI o
 
 MySQL is available on host port **3307** (mapped from container 3306) so it does not conflict with a local MySQL install.
 
-### 3. Run the sample SQL test
+### 3. Run the sample SQL queries
 
 With the stack running:
 
@@ -83,7 +87,7 @@ With the stack running:
 docker compose exec -T db mysql -uroot -pcs348pass --batch --raw lego_sets < db/test-sample.sql
 ```
 
-Compare the output to `db/test-sample.out`.
+The queries match the small Indiana Jones dataset in `data/subset/`. The `db/test-sample.out` file contains older expected output from the full dataset and does not match this subset.
 
 ### 4. Stop the app
 
