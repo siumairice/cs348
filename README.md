@@ -20,7 +20,7 @@ db/
 src/
   index.html           plain HTML test page served by FastAPI at /
 web/                   Next.js frontend (App Router, Tailwind)
-  app/                 pages: overview, /sets, /sets/[setNum], /themes, /themes/[id]
+  app/                 pages: overview, /sets, /sets/[setNum], /themes, /themes/[id], /parts, /parts/[partNum]
   lib/api.ts           typed client for the FastAPI endpoints
 data/                  full Rebrickable CSV downloads (inventory_parts.csv uses Git LFS)
   subset/              small foreign-key-valid sample (Indiana Jones sets)
@@ -76,6 +76,8 @@ API endpoints:
 | `GET /api/themes` | All themes with set counts and year range. Param: `q` |
 | `GET /api/themes/{id}` | Theme stats, subthemes, and sets per year |
 | `GET /api/stats` | Catalogue totals, sets per year, top themes, biggest sets |
+| `GET /api/parts` | Search parts by number or name, with how many related parts each has. Params: `q`, `limit` (max 200) |
+| `GET /api/parts/{part_num}` | One part and its related parts (prints, patterns, alternate moulds, alternates, sub-parts, pairs) with relationship type and per-group totals. Params: `limit` (default 100, max 200), `offset` |
 
 ### Frontend development
 

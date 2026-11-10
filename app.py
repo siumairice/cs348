@@ -292,3 +292,94 @@ def get_stats():
         "top_themes": top_themes,
         "biggest_sets": biggest_sets,
     }
+
+
+@app.get("/api/parts")
+def list_parts(
+    q: str = Query(default=""), limit: int = Query(default=50, ge=1, le=200)
+):
+    q = q.strip()
+    parts = run_query(
+        """
+        SELECT
+            p.part_num,
+            p.name,
+            c.name AS category_name,
+            COALESCE(rc.related_count, 0) AS related_count
+        FROM parts p
+        JOIN part_categories c ON c.id = p.part_cat_id
+        LEFT JOIN (
+            SELECT part_num, COUNT(*) AS related_count
+            FROM (
+                SELECT child_part_num AS part_num FROM part_relationships
+                UNION ALL
+                SELECT parent_part_num FROM part_relationships
+            ) AS ends
+            GROUP BY part_num
+        ) AS rc ON rc.part_num = p.part_num
+        WHERE %s = '' OR p.part_num LIKE %s OR p.name LIKE %s
+        ORDER BY p.part_num = %s DESC, related_count DESC, p.part_num
+        LIMIT %s
+        """,
+        (q, f"%{q}%", f"%{q}%", q, limit),
+    )
+    return {"parts": parts}
+
+
+@app.get("/api/parts/{part_num}")
+def get_part(
+    part_num: str,
+    limit: int = Query(default=100, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+):
+    part = run_query(
+        """
+        SELECT p.part_num, p.name, p.part_material, c.id AS category_id, c.name AS category_name
+        FROM parts p
+        JOIN part_categories c ON c.id = p.part_cat_id
+        WHERE p.part_num = %s
+        """,
+        (part_num,),
+        one=True,
+    )
+    if part is None:
+        raise HTTPException(status_code=404, detail="Part not found")
+
+    related = run_query(
+        """
+        SELECT r.rel_type, 'child' AS role, p.part_num, p.name, c.name AS category_name
+        FROM part_relationships r
+        JOIN parts p ON p.part_num = r.parent_part_num
+        JOIN part_categories c ON c.id = p.part_cat_id
+        WHERE r.child_part_num = %s
+        UNION ALL
+        SELECT r.rel_type, 'parent' AS role, p.part_num, p.name, c.name AS category_name
+        FROM part_relationships r
+        JOIN parts p ON p.part_num = r.child_part_num
+        JOIN part_categories c ON c.id = p.part_cat_id
+        WHERE r.parent_part_num = %s
+        ORDER BY FIELD(rel_type, 'P', 'T', 'M', 'A', 'B', 'R'), role DESC, part_num
+        LIMIT %s OFFSET %s
+        """,
+        (part_num, part_num, limit, offset),
+    )
+    counts = run_query(
+        """
+        SELECT rel_type, role, COUNT(*) AS count
+        FROM (
+            SELECT rel_type, 'child' AS role FROM part_relationships WHERE child_part_num = %s
+            UNION ALL
+            SELECT rel_type, 'parent' AS role FROM part_relationships WHERE parent_part_num = %s
+        ) AS ends
+        GROUP BY rel_type, role
+        """,
+        (part_num, part_num),
+    )
+    return {
+        "part": part,
+        "total": sum(row["count"] for row in counts),
+        "limit": limit,
+        "offset": offset,
+        "counts": counts,
+        "related": related,
+    }

@@ -109,3 +109,30 @@ WHERE
     )
 ORDER BY
     ucs.completed_at DESC;
+
+-- Find parts related to part 2339, with the relationship type and which side 2339 is on.
+SELECT
+    r.rel_type,
+    'child' AS role,
+    p.part_num,
+    p.name
+FROM
+    part_relationships AS r
+    JOIN parts AS p ON p.part_num = r.parent_part_num
+WHERE
+    r.child_part_num = '2339'
+UNION ALL
+SELECT
+    r.rel_type,
+    'parent' AS role,
+    p.part_num,
+    p.name
+FROM
+    part_relationships AS r
+    JOIN parts AS p ON p.part_num = r.child_part_num
+WHERE
+    r.parent_part_num = '2339'
+ORDER BY
+    rel_type,
+    role,
+    part_num;
