@@ -1,25 +1,25 @@
 Query 1
-set_num         name                            year
-COMCON002-1     Indiana Jones Brickmaster Pack  2008
+set_num      name                            year  num_parts  theme_name     parent_theme_name
+COMCON002-1  Indiana Jones Brickmaster Pack  2008  116        Indiana Jones  NULL
 
 Query 2
-set_num         name                            year    num_parts
-20004-1         Jungle Cruiser                  2008    83
-COMCON002-1     Indiana Jones Brickmaster Pack  2008    116
+set_num      name                            year  num_parts  theme_name     parent_theme_name
+20004-1      Jungle Cruiser                  2008  83         Indiana Jones  NULL
+COMCON002-1  Indiana Jones Brickmaster Pack  2008  116        Indiana Jones  NULL
 
 Query 3
-set_num         name                            can_build
-COMCON002-1     Indiana Jones Brickmaster Pack  0
+set_num      name                            year  pieces_required  pieces_owned  lots_missing
+COMCON002-1  Indiana Jones Brickmaster Pack  2008  6                6             0
 
 Query 4
-set_num         name                            completed_at
-20004-1         Jungle Cruiser                  2026-10-20 10:00:00
-COMCON002-1     Indiana Jones Brickmaster Pack  2026-10-15 10:00:00
+set_num      name                            completed_at
+20004-1      Jungle Cruiser                  2026-10-20 10:00:00
+COMCON002-1  Indiana Jones Brickmaster Pack  2026-10-15 10:00:00
 
 Query 5
-rel_type        role    part_num        name
-M               parent  14395           Brick Arch 1 x 5 x 4 [Continuous Bow, Raised Underside Cross Supports]
+rel_type  role    part_num  name
+M         parent  14395     Brick Arch 1 x 5 x 4 [Continuous Bow, Raised Underside Cross Supports]
 
 Query 6
-set_num         name                            completed_at
-COMCON002-1     Indiana Jones Brickmaster Pack  2026-10-15 10:00:00
+set_num      name                            completed_at
+COMCON002-1  Indiana Jones Brickmaster Pack  2026-10-15 10:00:00
