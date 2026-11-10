@@ -182,6 +182,13 @@ def already_loaded(cursor):
 DERIVED_TABLES = ["inventory_totals"]
 
 
+# CHECK constraints on tables the importer never drops. CREATE TABLE IF NOT
+# EXISTS skips tables that already exist, so older volumes get these here.
+USER_TABLE_CHECKS = [
+    ("user_parts", "chk_user_parts_quantity", "quantity > 0"),
+]
+
+
 def run_schema(cursor):
     """Run db/schema.sql. Every statement is idempotent (IF NOT EXISTS / INSERT IGNORE)."""
     schema = re.sub(r"--[^\n]*", "", SCHEMA_PATH.read_text())
@@ -189,6 +196,15 @@ def run_schema(cursor):
         sql = statement.strip()
         if sql:
             cursor.execute(sql)
+    for table, name, condition in USER_TABLE_CHECKS:
+        cursor.execute(
+            "SELECT COUNT(*) FROM information_schema.table_constraints "
+            "WHERE table_schema = DATABASE() AND table_name = %s AND constraint_name = %s",
+            (table, name),
+        )
+        if cursor.fetchone()[0] == 0:
+            cursor.execute(f"ALTER TABLE {table} ADD CONSTRAINT {name} CHECK ({condition})")
+            print(f"Added {name} to {table}")
 
 
 def load_schema(cursor):

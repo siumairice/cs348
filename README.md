@@ -197,7 +197,7 @@ requirements.txt       Python dependencies
 Dockerfile             backend and importer image
 docker-compose.yml     db, importer, app, web services
 db/
-  schema.sql           tables, keys, indexes, demo user (shared by sample and production)
+  schema.sql           tables, keys, CHECK constraints, indexes, demo user (sample and production)
   import_data.py       validates, transforms, and loads the CSVs; builds inventory_totals
   download_data.sh     downloads the latest production CSVs from Rebrickable
   test-sample.sql      one query per feature, for the sample database

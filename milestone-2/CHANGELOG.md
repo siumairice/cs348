@@ -100,3 +100,12 @@ Users can record the parts they own and see which sets they can build with them.
 | Feature 4: completed sets | 0.1 ms | Primary-key lookup on `user_completed_sets` |
 | Feature 5: related parts | 0.4 ms | Lookups on the `child_part_num` and `parent_part_num` foreign key indexes |
 
+## CHECK constraints (C2)
+
+- Added the `CHECK` constraints described in the report's relational model to `db/schema.sql`. MySQL 8 enforces them, rejecting a bad row with error 3819:
+  - `chk_sets_num_parts`, `chk_minifigs_num_parts`: `num_parts >= 0`
+  - `chk_inventories_version`: `version >= 1`
+  - `chk_inventory_parts_quantity`, `chk_inventory_sets_quantity`, `chk_inventory_minifigs_quantity`, `chk_user_parts_quantity`: `quantity > 0`
+- No row in the production or sample data breaks them.
+- `user_parts` is never dropped, so `db/import_data.py` adds `chk_user_parts_quantity` to existing databases when it is missing. The catalogue tables pick up their constraints on the next reload (`FORCE_IMPORT=1`).
+

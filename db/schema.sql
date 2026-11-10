@@ -2,6 +2,8 @@ CREATE DATABASE IF NOT EXISTS lego_sets;
 USE lego_sets;
 
 -- Tables are listed parent-first so foreign keys resolve in order.
+-- CHECK constraints (MySQL 8.0.16+ enforces them) reject negative piece counts,
+-- non-positive quantities, and inventory versions below 1.
 -- All data comes from the Rebrickable CSV downloads in data/.
 
 CREATE TABLE IF NOT EXISTS themes (
@@ -17,6 +19,7 @@ CREATE TABLE IF NOT EXISTS sets (
     year INT NOT NULL,
     theme_id INT NULL,
     num_parts INT NULL,
+    CONSTRAINT chk_sets_num_parts CHECK (num_parts >= 0),
     img_url VARCHAR(512) NULL,
     FOREIGN KEY (theme_id) REFERENCES themes(id) ON DELETE SET NULL
 );
@@ -67,6 +70,7 @@ CREATE TABLE IF NOT EXISTS minifigs (
     fig_num VARCHAR(32) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     num_parts INT NULL,
+    CONSTRAINT chk_minifigs_num_parts CHECK (num_parts >= 0),
     img_url VARCHAR(512) NULL
 );
 
@@ -75,6 +79,7 @@ CREATE TABLE IF NOT EXISTS minifigs (
 CREATE TABLE IF NOT EXISTS inventories (
     id INT PRIMARY KEY,
     version INT NOT NULL,
+    CONSTRAINT chk_inventories_version CHECK (version >= 1),
     set_num VARCHAR(32) NOT NULL,
     UNIQUE KEY uq_inventories_set_version (set_num, version)
 );
@@ -84,6 +89,7 @@ CREATE TABLE IF NOT EXISTS inventory_parts (
     part_num VARCHAR(32) NOT NULL,
     color_id INT NOT NULL,
     quantity INT NOT NULL,
+    CONSTRAINT chk_inventory_parts_quantity CHECK (quantity > 0),
     is_spare BOOLEAN NOT NULL,
     img_url VARCHAR(512) NULL,
     PRIMARY KEY (inventory_id, part_num, color_id, is_spare),
@@ -99,6 +105,7 @@ CREATE TABLE IF NOT EXISTS inventory_sets (
     inventory_id INT NOT NULL,
     set_num VARCHAR(32) NOT NULL,
     quantity INT NOT NULL,
+    CONSTRAINT chk_inventory_sets_quantity CHECK (quantity > 0),
     PRIMARY KEY (inventory_id, set_num),
     FOREIGN KEY (inventory_id) REFERENCES inventories(id),
     FOREIGN KEY (set_num) REFERENCES sets(set_num)
@@ -108,6 +115,7 @@ CREATE TABLE IF NOT EXISTS inventory_minifigs (
     inventory_id INT NOT NULL,
     fig_num VARCHAR(32) NOT NULL,
     quantity INT NOT NULL,
+    CONSTRAINT chk_inventory_minifigs_quantity CHECK (quantity > 0),
     PRIMARY KEY (inventory_id, fig_num),
     FOREIGN KEY (inventory_id) REFERENCES inventories(id),
     FOREIGN KEY (fig_num) REFERENCES minifigs(fig_num)
@@ -167,6 +175,7 @@ CREATE TABLE IF NOT EXISTS user_parts (
     part_num VARCHAR(32) NOT NULL,
     color_id INT NOT NULL,
     quantity INT NOT NULL,
+    CONSTRAINT chk_user_parts_quantity CHECK (quantity > 0),
     PRIMARY KEY (user_id, part_num, color_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (part_num) REFERENCES parts(part_num),
