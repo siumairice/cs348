@@ -91,7 +91,9 @@ Users can record the parts they own and see which sets they can build with them.
 
 | Query | Median | Plan |
 | --- | ---: | --- |
-| Feature 1: sets containing a part in a colour | 1.5 ms | Covering lookup on `idx_inventory_parts_part_color` (1,011 matching inventories) |
+| Feature 1: colours a part comes in | 14 ms | One covering lookup on `idx_inventory_parts_part_color` per colour (9,414 rows for part 3001) |
+| Feature 1: count sets containing a part in a colour | 1.8 ms | Covering lookup on `idx_inventory_parts_part_color` |
+| Feature 1: first page of sets containing a part in a colour | 2.3 ms | Same lookup (1,068 rows), then primary-key lookups and a sort of the 1,011 sets |
 | Feature 2: count matching sets | 3.2 ms | Full scan of `sets` (28,547 rows). The theme-or-subtheme `OR` prevents index use, but the table is small |
 | Feature 2: first page of matching sets | 4.9 ms | Same scan, then a sort of the 19 matches |
 | Feature 3: buildable sets (app query) | 99 ms | Starts from the user's 898 lots, a covering lookup per lot, then `inventory_totals` by primary key |
@@ -108,4 +110,22 @@ Users can record the parts they own and see which sets they can build with them.
   - `chk_inventory_parts_quantity`, `chk_inventory_sets_quantity`, `chk_inventory_minifigs_quantity`, `chk_user_parts_quantity`: `quantity > 0`
 - No row in the production or sample data breaks them.
 - `user_parts` is never dropped, so `db/import_data.py` adds `chk_user_parts_quantity` to existing databases when it is missing. The catalogue tables pick up their constraints on the next reload (`FORCE_IMPORT=1`).
+
+## Feature 1: Find sets by part
+
+Implemented Feature 1 (R6): users enter a loose piece's part number and colour, and see which sets it comes from.
+
+### API (`app.py`)
+- `GET /api/parts/{part_num}/colors` lists the colours a part comes in, with how many sets use it in each colour (80 colours for part 3001). The page uses it for the colour drop-down.
+- `GET /api/parts/{part_num}/sets?color_id=` runs the R6 query: sets containing the part in that colour, spares excluded, newest first, with `DISTINCT` so a set with several inventory versions appears once. It returns a `total` and supports `limit`/`offset`. An unknown part or colour returns 404.
+- Both queries look up `inventory_parts` through `idx_inventory_parts_part_color` and take 2 to 14 ms on the production data.
+
+### Frontend (`web/`)
+- New **Find Sets** page (`/find-sets`), linked in the nav. Enter a part number, then pick a colour from a drop-down of the colours that part comes in (each with its set count), or click a colour swatch. The results are the matching sets, 48 per page.
+- Handles an unknown part (with a link to part search), an unknown colour, and colours with no sets.
+- Each part's page (`/parts/[partNum]`) links to "Find sets with this part".
+- The search lives in the URL (`/find-sets?part=3001&color=4`), so results can be shared.
+
+### Tests
+- `db/test-production.sql` now runs the app's Feature 1 queries (the colour list, the count, and the first page). The 1,011 sets for part 3001 in red match the earlier report-template output, and `db/test-production.out` and `db/test-production-plans.out` are regenerated.
 

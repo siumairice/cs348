@@ -87,6 +87,12 @@ async function PartDetail({
           <span className="font-mono">{part.part_num}</span> · {part.category_name}
           {part.part_material && ` · ${part.part_material}`}
         </div>
+        <Link
+          href={`/find-sets?part=${encodeURIComponent(part.part_num)}`}
+          className="mt-2 inline-block text-sm text-accent hover:underline"
+        >
+          Find sets with this part →
+        </Link>
       </div>
 
       {total === 0 ? (

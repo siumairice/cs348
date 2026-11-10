@@ -14,11 +14,11 @@ LEGO Sets Explorer: a Next.js frontend and FastAPI backend over MySQL, built on 
 
 ## Features
 
-Feature numbers match the report (R6 to R10). Four of the five are implemented.
+Feature numbers match the report (R6 to R10). All five are implemented.
 
 | # | Feature | Status | Where in the app | Implementation |
 | --- | --- | --- | --- | --- |
-| 1 (R6) | Find sets that contain a given part in a given colour | Not implemented in the app yet. The query is tested in `db/test-sample.sql` and `db/test-production.sql` | | |
+| 1 (R6) | Find sets that contain a given part in a given colour | Implemented | **Find Sets** (`/find-sets`): enter a part number, pick one of the colours it comes in, and see the sets, newest first. Also linked from each part's page | `list_part_colors`, `list_sets_with_part` in `app.py`; `web/app/find-sets/page.tsx` |
 | 2 (R7) | Search sets by theme and piece count | Implemented | **Sets** (`/sets`): theme drop-down, min/max pieces, year range, name search, sorting, pagination | `list_sets` in `app.py`; `web/app/sets/page.tsx` |
 | 3 (R8) | Find sets the user can build with their pieces | Implemented | **My Parts** (`/my-parts`) to enter pieces, or **I own this set** on a set page; **What Can I Build** (`/build`) for buildable and nearly buildable sets | `list_user_parts`, `add_user_part`, `remove_user_part`, `add_set_parts`, `list_buildable_sets`, and `BUILDABLE_SQL` in `app.py`; `inventory_totals` in `db/schema.sql`; `web/app/my-parts/`, `web/app/build/page.tsx` |
 | 4 (R9) | Mark sets as completed and list them | Implemented | **Mark as Completed** / **Remove** on a set page; **My Completed Sets** (`/completed`) | `list_completed`, `mark_completed`, `remove_completed` in `app.py`; `web/app/completed/` |
@@ -162,6 +162,7 @@ Compare the output with `db/test-production.out`.
 Query plans and timings (median of 5 runs, plus `EXPLAIN ANALYZE`) for the same queries are in `db/test-production-plans.out`. `db/explain_production.py` regenerates them. It reads the queries tagged `-- plan:` in `db/test-production.sql`, so the timed queries are always the ones in the test file:
 
 ```bash
+docker compose up -d --build app   # the app image holds a copy of db/, so rebuild after editing the SQL
 docker compose exec -T app python db/explain_production.py > db/test-production-plans.out
 ```
 
@@ -181,6 +182,8 @@ One mismatch in the data: about 17,000 rows in `inventories` (and some in `set_m
 | `GET /api/completed` | The demo user's completed sets, newest first |
 | `POST /api/completed/{set_num}` | Mark a set as completed today (409 if already completed, 404 if no such set) |
 | `DELETE /api/completed/{set_num}` | Remove a completed set. Returns `{"removed": true\|false}` |
+| `GET /api/parts/{part_num}/colors` | Feature 1: the colours a part comes in, with the number of sets using it in each colour. 404 for an unknown part |
+| `GET /api/parts/{part_num}/sets` | Feature 1: sets containing the part in a colour, newest first, spares excluded. Params: `color_id` (required), `limit` (default 48, max 200), `offset`. 404 for an unknown part or colour |
 | `GET /api/colors` | All colours a user can own, for the My Parts form |
 | `GET /api/users/{id}/parts` | A user's parts with part name, colour name, and quantity |
 | `POST /api/users/{id}/parts` | Add pieces. JSON body `{part_num, color_id, quantity}`. Adding a part the user already owns increases its quantity. 400 for an unknown part or colour |
@@ -210,7 +213,7 @@ src/
   index.html           plain HTML test page served by FastAPI at /
 web/                   Next.js frontend (App Router, TypeScript, Tailwind)
   app/                 pages: /, /sets, /sets/[setNum], /themes, /themes/[id], /parts,
-                       /parts/[partNum], /my-parts, /build, /completed
+                       /parts/[partNum], /find-sets, /my-parts, /build, /completed
   lib/api.ts           typed client for the FastAPI endpoints
 data/                  production dataset snapshot (inventory_parts.csv uses Git LFS)
   subset/              sample dataset

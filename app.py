@@ -506,6 +506,105 @@ def get_part(
 
 
 # ---------------------------------------------------------------------------
+# Feature 1: find the sets that contain a given part in a given colour.
+# Both queries look up inventory_parts by idx_inventory_parts_part_color.
+# ---------------------------------------------------------------------------
+
+
+def require_part(part_num: str):
+    part = run_query(
+        "SELECT part_num, name FROM parts WHERE part_num = %s", (part_num,), one=True
+    )
+    if part is None:
+        raise HTTPException(status_code=404, detail="Part not found")
+    return part
+
+
+@app.get("/api/parts/{part_num}/colors")
+def list_part_colors(part_num: str):
+    """The colours a part comes in, with how many sets use it in each colour."""
+    part = require_part(part_num)
+    colors = run_query(
+        """
+        SELECT
+            c.id,
+            c.name,
+            c.rgb,
+            COUNT(DISTINCT s.set_num) AS set_count
+        FROM inventory_parts ip
+        JOIN inventories i ON i.id = ip.inventory_id
+        JOIN sets s ON s.set_num = i.set_num
+        JOIN colors c ON c.id = ip.color_id
+        WHERE ip.part_num = %s
+          AND ip.is_spare = 0
+        GROUP BY c.id, c.name, c.rgb
+        ORDER BY set_count DESC, c.name
+        """,
+        (part_num,),
+    )
+    return {"part": part, "colors": colors}
+
+
+@app.get("/api/parts/{part_num}/sets")
+def list_sets_with_part(
+    part_num: str,
+    color_id: int,
+    limit: int = Query(default=48, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+):
+    """Feature 1 (R6): sets containing the part in this colour, newest first."""
+    part = require_part(part_num)
+    color = run_query(
+        "SELECT id, name, rgb FROM colors WHERE id = %s", (color_id,), one=True
+    )
+    if color is None:
+        raise HTTPException(status_code=404, detail="Colour not found")
+
+    # Spare pieces don't count. DISTINCT because a set can list the part in
+    # several inventory versions.
+    matches = """
+        FROM sets AS s
+        JOIN inventories AS i ON i.set_num = s.set_num
+        JOIN inventory_parts AS ip ON ip.inventory_id = i.id
+        LEFT JOIN themes AS t ON t.id = s.theme_id
+        LEFT JOIN themes AS parent ON parent.id = t.parent_id
+        WHERE ip.part_num = %s
+          AND ip.color_id = %s
+          AND ip.is_spare = 0
+    """
+    total = run_query(
+        f"SELECT COUNT(DISTINCT s.set_num) AS total {matches}",
+        (part_num, color_id),
+        one=True,
+    )
+    sets = run_query(
+        f"""
+        SELECT DISTINCT
+            s.set_num,
+            s.name,
+            s.year,
+            s.num_parts,
+            s.img_url,
+            s.theme_id,
+            t.name AS theme_name,
+            parent.name AS parent_theme_name
+        {matches}
+        ORDER BY s.year DESC, s.set_num
+        LIMIT %s OFFSET %s
+        """,
+        (part_num, color_id, limit, offset),
+    )
+    return {
+        "part": part,
+        "color": color,
+        "total": total["total"],
+        "limit": limit,
+        "offset": offset,
+        "sets": sets,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Feature 3: a user's parts and the sets they can build with them.
 # There is no login yet, so the frontend acts as the demo user (id 1).
 # ---------------------------------------------------------------------------

@@ -8,25 +8,39 @@
 +--------------------------------------------------------+
 | Feature 1: sets containing part 3001 in Red (colour 4) |
 +--------------------------------------------------------+
-+------------+
-| total_sets |
-+------------+
-|       1011 |
-+------------+
-+-----------+----------------------------------+------+
-| set_num   | name                             | year |
-+-----------+----------------------------------+------+
-| 11045-1   | Creative Colorful Bricks         | 2026 |
-| 11370-1   | Stranger Things: The Creel House | 2026 |
-| 11378-1   | Douglas DC-3 PAN AM Airliner     | 2026 |
-| 11513-1   | Dark Flower Arrangement          | 2026 |
-| 31376-1   | Cute Hamster with a Flower       | 2026 |
-| 4000049-1 | Vintage LEGO Logo                | 2026 |
-| 40868-1   | Up-Scaled Red Minifigure         | 2026 |
-| 40874-1   | Santa's Holiday Countdown        | 2026 |
-| 40875-1   | Up-Scaled Mrs. Claus Minifigure  | 2026 |
-| 40885-1   | Duck Family                      | 2026 |
-+-----------+----------------------------------+------+
++----+-------------------+--------+-----------+
+| id | name              | rgb    | set_count |
++----+-------------------+--------+-----------+
+|  0 | Black             | 05131D |      1115 |
+| 15 | White             | FFFFFF |      1096 |
+|  4 | Red               | C91A09 |      1011 |
+| 14 | Yellow            | F2CD37 |       729 |
+|  1 | Blue              | 0055BF |       673 |
+| 71 | Light Bluish Gray | A0A5A9 |       662 |
+| 72 | Dark Bluish Gray  | 6C6E68 |       504 |
+| 70 | Reddish Brown     | 582A12 |       390 |
+|  2 | Green             | 237841 |       383 |
+| 19 | Tan               | E4CD9E |       372 |
++----+-------------------+--------+-----------+
++-------+
+| total |
++-------+
+|  1011 |
++-------+
++-----------+----------------------------------+------+-----------+----------------+-------------------+
+| set_num   | name                             | year | num_parts | theme_name     | parent_theme_name |
++-----------+----------------------------------+------+-----------+----------------+-------------------+
+| 11045-1   | Creative Colorful Bricks         | 2026 |       820 | Classic        | NULL              |
+| 11370-1   | Stranger Things: The Creel House | 2026 |      2593 | Icons          | NULL              |
+| 11378-1   | Douglas DC-3 PAN AM Airliner     | 2026 |      1903 | Icons          | NULL              |
+| 11513-1   | Dark Flower Arrangement          | 2026 |       562 | Botanicals     | NULL              |
+| 31376-1   | Cute Hamster with a Flower       | 2026 |       166 | Creator 3-in-1 | Creator           |
+| 4000049-1 | Vintage LEGO Logo                | 2026 |      1614 | LEGO Exclusive | NULL              |
+| 40868-1   | Up-Scaled Red Minifigure         | 2026 |       930 | Pokémon        | NULL              |
+| 40874-1   | Santa's Holiday Countdown        | 2026 |       907 | Christmas      | Seasonal          |
+| 40875-1   | Up-Scaled Mrs. Claus Minifigure  | 2026 |       904 | Christmas      | Seasonal          |
+| 40885-1   | Duck Family                      | 2026 |       262 | Creator        | NULL              |
++-----------+----------------------------------+------+-----------+----------------+-------------------+
 +------------------------------------------------------------+
 | feature                                                    |
 +------------------------------------------------------------+

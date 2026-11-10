@@ -23,6 +23,7 @@ const NAV = [
   { href: "/sets", label: "Sets" },
   { href: "/themes", label: "Themes" },
   { href: "/parts", label: "Parts" },
+  { href: "/find-sets", label: "Find Sets" },
   { href: "/completed", label: "My Completed Sets" },
   { href: "/my-parts", label: "My Parts" },
   { href: "/build", label: "What Can I Build" },

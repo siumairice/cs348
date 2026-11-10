@@ -220,3 +220,25 @@ export async function sendForm(
         : `Request failed with ${response.status}`;
   return { ok: false, error };
 }
+
+// Feature 1: sets that contain a part in a colour.
+export type PartColor = { id: number; name: string; rgb: string; set_count: number };
+
+export type SetsWithPart = {
+  part: { part_num: string; name: string };
+  color: { id: number; name: string; rgb: string };
+  total: number;
+  limit: number;
+  offset: number;
+  sets: SetSummary[];
+};
+
+export const getPartColors = (partNum: string) =>
+  get<{ part: { part_num: string; name: string }; colors: PartColor[] }>(
+    `/api/parts/${encodeURIComponent(partNum)}/colors`,
+  );
+
+export const getSetsWithPart = (
+  partNum: string,
+  params: { color_id: string; limit?: string; offset?: string },
+) => get<SetsWithPart>(`/api/parts/${encodeURIComponent(partNum)}/sets`, params);

@@ -1,155 +1,193 @@
 Median of 5 runs per query, on the production dataset (MySQL 8.0.46).
 
-Query                                                        Median  Rows
-Feature 1, sets containing a part in a colour                 1.5 ms  10
-Feature 2, count matching sets                                3.2 ms  1
-Feature 2, first page of matching sets                        4.9 ms  10
-Feature 3, buildable sets (app query)                        99.1 ms  10
-Feature 3, almost-buildable sets (app query)                150.0 ms  10
-Feature 3, report's NOT EXISTS template (for comparison)    406.6 ms  1
-Feature 4, completed sets                                     0.1 ms  2
-Feature 5, related parts                                      0.4 ms  10
+Query                                                           Median  Rows
+Feature 1, colours a part comes in                              14.0 ms  10
+Feature 1, count sets containing a part in a colour              1.8 ms  1
+Feature 1, first page of sets containing a part in a colour      2.3 ms  10
+Feature 2, count matching sets                                   3.1 ms  1
+Feature 2, first page of matching sets                           5.0 ms  10
+Feature 3, buildable sets (app query)                          100.0 ms  10
+Feature 3, almost-buildable sets (app query)                   143.9 ms  10
+Feature 3, report's NOT EXISTS template (for comparison)       366.8 ms  1
+Feature 4, completed sets                                        0.1 ms  2
+Feature 5, related parts                                         0.3 ms  10
 
 ================================================================================
-Feature 1, sets containing a part in a colour (1.5 ms)
+Feature 1, colours a part comes in (14.0 ms)
 ================================================================================
--> Limit: 10 row(s)  (actual time=1.63..1.63 rows=10 loops=1)
-    -> Sort: s.`year` DESC, s.set_num, limit input to 10 row(s) per chunk  (actual time=1.63..1.63 rows=10 loops=1)
-        -> Table scan on <temporary>  (cost=1060..1076 rows=1074) (actual time=1.51..1.55 rows=1011 loops=1)
-            -> Temporary table with deduplication  (cost=1060..1060 rows=1074) (actual time=1.5..1.5 rows=1011 loops=1)
-                -> Nested loop inner join  (cost=952 rows=1074) (actual time=0.0179..1.27 rows=1068 loops=1)
-                    -> Nested loop inner join  (cost=576 rows=1074) (actual time=0.0165..0.56 rows=1074 loops=1)
-                        -> Covering index lookup on ip using idx_inventory_parts_part_color (part_num='3001', color_id=4, is_spare=0)  (cost=130 rows=1074) (actual time=0.015..0.163 rows=1074 loops=1)
-                        -> Single-row index lookup on i using PRIMARY (id=ip.inventory_id)  (cost=0.316 rows=1) (actual time=284e-6..299e-6 rows=1 loops=1074)
-                    -> Single-row index lookup on s using PRIMARY (set_num=i.set_num)  (cost=0.25 rows=1) (actual time=570e-6..584e-6 rows=0.994 loops=1074)
-
-
-================================================================================
-Feature 2, count matching sets (3.2 ms)
-================================================================================
--> Aggregate: count(0)  (cost=11967 rows=1) (actual time=3.86..3.86 rows=1 loops=1)
-    -> Nested loop left join  (cost=10886 rows=10813) (actual time=1.97..3.86 rows=19 loops=1)
-        -> Filter: ((s.theme_id = 126) or (t.parent_id = 126))  (cost=7101 rows=10813) (actual time=1.97..3.85 rows=19 loops=1)
-            -> Nested loop left join  (cost=7101 rows=10813) (actual time=0.0119..3.79 rows=2548 loops=1)
-                -> Filter: (s.num_parts >= 500)  (cost=3317 rows=10813) (actual time=0.0105..3.26 rows=2548 loops=1)
-                    -> Table scan on s  (cost=3317 rows=32443) (actual time=0.0095..2.75 rows=28547 loops=1)
-                -> Single-row index lookup on t using PRIMARY (id=s.theme_id)  (cost=0.25 rows=1) (actual time=119e-6..134e-6 rows=1 loops=2548)
-        -> Single-row covering index lookup on parent using PRIMARY (id=t.parent_id)  (cost=0.25 rows=1) (actual time=61.4e-6..70.2e-6 rows=1 loops=19)
+-> Limit: 10 row(s)  (actual time=14.5..14.5 rows=10 loops=1)
+    -> Sort: set_count DESC, c.`name`, limit input to 10 row(s) per chunk  (actual time=14.5..14.5 rows=10 loops=1)
+        -> Stream results  (cost=4254 rows=1790) (actual time=1.96..14.5 rows=80 loops=1)
+            -> Group aggregate: count(distinct s.set_num)  (cost=4254 rows=1790) (actual time=1.96..14.5 rows=80 loops=1)
+                -> Nested loop inner join  (cost=3842 rows=4115) (actual time=0.0801..11.3 rows=9394 loops=1)
+                    -> Nested loop inner join  (cost=2402 rows=4115) (actual time=0.0789..5.72 rows=9414 loops=1)
+                        -> Nested loop inner join  (cost=745 rows=4115) (actual time=0.0779..2.24 rows=9414 loops=1)
+                            -> Sort: c.id, c.`name`, c.rgb  (cost=28.2 rows=275) (actual time=0.0711..0.0783 rows=275 loops=1)
+                                -> Table scan on c  (cost=28.2 rows=275) (actual time=0.00558..0.0345 rows=275 loops=1)
+                            -> Covering index lookup on ip using idx_inventory_parts_part_color (part_num='3001', color_id=c.id, is_spare=0)  (cost=1.12 rows=15) (actual time=0.00157..0.00684 rows=34.2 loops=275)
+                        -> Single-row index lookup on i using PRIMARY (id=ip.inventory_id)  (cost=0.303 rows=1) (actual time=284e-6..298e-6 rows=1 loops=9414)
+                    -> Single-row covering index lookup on s using PRIMARY (set_num=i.set_num)  (cost=0.25 rows=1) (actual time=501e-6..515e-6 rows=0.998 loops=9414)
 
 
 ================================================================================
-Feature 2, first page of matching sets (4.9 ms)
+Feature 1, count sets containing a part in a colour (1.8 ms)
 ================================================================================
--> Limit: 10 row(s)  (cost=15212 rows=10) (actual time=4.96..5.21 rows=10 loops=1)
-    -> Nested loop left join  (cost=15212 rows=32443) (actual time=4.96..5.21 rows=10 loops=1)
-        -> Filter: ((s.theme_id = 126) or (t.parent_id = 126))  (cost=9264 rows=32443) (actual time=4.96..5.2 rows=10 loops=1)
-            -> Nested loop left join  (cost=9264 rows=32443) (actual time=4.94..5.19 rows=712 loops=1)
-                -> Sort: (s.num_parts is null), s.num_parts, s.`name`  (cost=3317 rows=32443) (actual time=4.93..4.95 rows=712 loops=1)
-                    -> Filter: (s.num_parts >= 500)  (cost=3317 rows=32443) (actual time=0.0168..4.2 rows=2548 loops=1)
-                        -> Table scan on s  (cost=3317 rows=32443) (actual time=0.0158..3.72 rows=28547 loops=1)
-                -> Single-row index lookup on t using PRIMARY (id=s.theme_id)  (cost=0.25 rows=1) (actual time=244e-6..259e-6 rows=1 loops=712)
-        -> Single-row index lookup on parent using PRIMARY (id=t.parent_id)  (cost=0.25 rows=1) (actual time=79.3e-6..87.7e-6 rows=1 loops=10)
+-> Aggregate: count(distinct s.set_num)  (cost=1803 rows=1) (actual time=2.07..2.07 rows=1 loops=1)
+    -> Nested loop left join  (cost=1695 rows=1074) (actual time=0.0166..1.79 rows=1068 loops=1)
+        -> Nested loop left join  (cost=1319 rows=1074) (actual time=0.0162..1.6 rows=1068 loops=1)
+            -> Nested loop inner join  (cost=944 rows=1074) (actual time=0.0156..1.25 rows=1068 loops=1)
+                -> Nested loop inner join  (cost=568 rows=1074) (actual time=0.0144..0.565 rows=1074 loops=1)
+                    -> Covering index lookup on ip using idx_inventory_parts_part_color (part_num='3001', color_id=4, is_spare=0)  (cost=135 rows=1074) (actual time=0.0135..0.165 rows=1074 loops=1)
+                    -> Single-row index lookup on i using PRIMARY (id=ip.inventory_id)  (cost=0.303 rows=1) (actual time=286e-6..301e-6 rows=1 loops=1074)
+                -> Single-row index lookup on s using PRIMARY (set_num=i.set_num)  (cost=0.25 rows=1) (actual time=551e-6..564e-6 rows=0.994 loops=1074)
+            -> Single-row index lookup on t using PRIMARY (id=s.theme_id)  (cost=0.25 rows=1) (actual time=233e-6..247e-6 rows=1 loops=1068)
+        -> Single-row covering index lookup on parent using PRIMARY (id=t.parent_id)  (cost=0.25 rows=1) (actual time=111e-6..118e-6 rows=0.491 loops=1068)
 
 
 ================================================================================
-Feature 3, buildable sets (app query) (99.1 ms)
+Feature 1, first page of sets containing a part in a colour (2.3 ms)
 ================================================================================
--> Limit: 10 row(s)  (actual time=113..113 rows=10 loops=1)
-    -> Sort: cov.pieces_required DESC, s.set_num, limit input to 10 row(s) per chunk  (actual time=113..113 rows=10 loops=1)
-        -> Stream results  (cost=12332 rows=0) (actual time=105..113 rows=12 loops=1)
-            -> Nested loop inner join  (cost=12332 rows=0) (actual time=105..113 rows=12 loops=1)
-                -> Nested loop inner join  (cost=8554 rows=0) (actual time=105..113 rows=12 loops=1)
-                    -> Nested loop inner join  (cost=3781 rows=0) (actual time=105..113 rows=13 loops=1)
-                        -> Table scan on m  (cost=2.5..2.5 rows=0) (actual time=105..105 rows=14674 loops=1)
-                            -> Materialize CTE matched  (cost=0..0 rows=0) (actual time=105..105 rows=14674 loops=1)
-                                -> Table scan on <temporary>  (actual time=103..104 rows=14674 loops=1)
-                                    -> Aggregate using temporary table  (actual time=103..103 rows=14674 loops=1)
-                                        -> Nested loop inner join  (cost=2429 rows=15114) (actual time=0.0202..54.1 rows=257405 loops=1)
-                                            -> Index lookup on o using PRIMARY (user_id=(@user_id))  (cost=90.3 rows=898) (actual time=0.013..0.147 rows=898 loops=1)
-                                            -> Covering index lookup on ip using idx_inventory_parts_part_color (part_num=o.part_num, color_id=o.color_id, is_spare=0)  (cost=0.923 rows=16.8) (actual time=0.00449..0.0519 rows=287 loops=898)
-                        -> Filter: ((it.lots - m.lots_covered) = 0)  (cost=0.25 rows=1) (actual time=454e-6..454e-6 rows=886e-6 loops=14674)
-                            -> Single-row index lookup on it using PRIMARY (inventory_id=m.inventory_id)  (cost=0.25 rows=1) (actual time=329e-6..344e-6 rows=1 loops=14674)
-                    -> Filter: (i.version = (select #4))  (cost=0.316 rows=1) (actual time=0.00611..0.00615 rows=0.923 loops=13)
-                        -> Single-row index lookup on i using PRIMARY (id=m.inventory_id)  (cost=0.316 rows=1) (actual time=0.00141..0.00143 rows=1 loops=13)
+-> Limit: 10 row(s)  (actual time=2.51..2.51 rows=10 loops=1)
+    -> Sort: s.`year` DESC, s.set_num, limit input to 10 row(s) per chunk  (actual time=2.51..2.51 rows=10 loops=1)
+        -> Table scan on <temporary>  (cost=1803..1819 rows=1074) (actual time=2.35..2.41 rows=1011 loops=1)
+            -> Temporary table with deduplication  (cost=1803..1803 rows=1074) (actual time=2.35..2.35 rows=1011 loops=1)
+                -> Nested loop left join  (cost=1695 rows=1074) (actual time=0.0171..1.86 rows=1068 loops=1)
+                    -> Nested loop left join  (cost=1319 rows=1074) (actual time=0.0165..1.66 rows=1068 loops=1)
+                        -> Nested loop inner join  (cost=944 rows=1074) (actual time=0.0158..1.31 rows=1068 loops=1)
+                            -> Nested loop inner join  (cost=568 rows=1074) (actual time=0.0146..0.572 rows=1074 loops=1)
+                                -> Covering index lookup on ip using idx_inventory_parts_part_color (part_num='3001', color_id=4, is_spare=0)  (cost=135 rows=1074) (actual time=0.0137..0.166 rows=1074 loops=1)
+                                -> Single-row index lookup on i using PRIMARY (id=ip.inventory_id)  (cost=0.303 rows=1) (actual time=289e-6..303e-6 rows=1 loops=1074)
+                            -> Single-row index lookup on s using PRIMARY (set_num=i.set_num)  (cost=0.25 rows=1) (actual time=599e-6..613e-6 rows=0.994 loops=1074)
+                        -> Single-row index lookup on t using PRIMARY (id=s.theme_id)  (cost=0.25 rows=1) (actual time=240e-6..254e-6 rows=1 loops=1068)
+                    -> Single-row index lookup on parent using PRIMARY (id=t.parent_id)  (cost=0.25 rows=1) (actual time=121e-6..127e-6 rows=0.491 loops=1068)
+
+
+================================================================================
+Feature 2, count matching sets (3.1 ms)
+================================================================================
+-> Aggregate: count(0)  (cost=10840 rows=1) (actual time=3.78..3.78 rows=1 loops=1)
+    -> Nested loop left join  (cost=9861 rows=9788) (actual time=1.88..3.78 rows=19 loops=1)
+        -> Filter: ((s.theme_id = 126) or (t.parent_id = 126))  (cost=6435 rows=9788) (actual time=1.88..3.78 rows=19 loops=1)
+            -> Nested loop left join  (cost=6435 rows=9788) (actual time=0.00979..3.71 rows=2548 loops=1)
+                -> Filter: (s.num_parts >= 500)  (cost=3009 rows=9788) (actual time=0.00908..3.21 rows=2548 loops=1)
+                    -> Table scan on s  (cost=3009 rows=29368) (actual time=0.00804..2.72 rows=28547 loops=1)
+                -> Single-row index lookup on t using PRIMARY (id=s.theme_id)  (cost=0.25 rows=1) (actual time=112e-6..127e-6 rows=1 loops=2548)
+        -> Single-row covering index lookup on parent using PRIMARY (id=t.parent_id)  (cost=0.25 rows=1) (actual time=63.6e-6..76.8e-6 rows=1 loops=19)
+
+
+================================================================================
+Feature 2, first page of matching sets (5.0 ms)
+================================================================================
+-> Limit: 10 row(s)  (cost=13777 rows=10) (actual time=5.16..5.42 rows=10 loops=1)
+    -> Nested loop left join  (cost=13777 rows=29368) (actual time=5.16..5.42 rows=10 loops=1)
+        -> Filter: ((s.theme_id = 126) or (t.parent_id = 126))  (cost=8393 rows=29368) (actual time=5.16..5.42 rows=10 loops=1)
+            -> Nested loop left join  (cost=8393 rows=29368) (actual time=5.14..5.4 rows=712 loops=1)
+                -> Sort: (s.num_parts is null), s.num_parts, s.`name`  (cost=3009 rows=29368) (actual time=5.13..5.15 rows=712 loops=1)
+                    -> Filter: (s.num_parts >= 500)  (cost=3009 rows=29368) (actual time=0.0182..4.38 rows=2548 loops=1)
+                        -> Table scan on s  (cost=3009 rows=29368) (actual time=0.0172..3.86 rows=28547 loops=1)
+                -> Single-row index lookup on t using PRIMARY (id=s.theme_id)  (cost=0.25 rows=1) (actual time=254e-6..269e-6 rows=1 loops=712)
+        -> Single-row index lookup on parent using PRIMARY (id=t.parent_id)  (cost=0.25 rows=1) (actual time=100e-6..121e-6 rows=1 loops=10)
+
+
+================================================================================
+Feature 3, buildable sets (app query) (100.0 ms)
+================================================================================
+-> Limit: 10 row(s)  (actual time=111..111 rows=10 loops=1)
+    -> Sort: cov.pieces_required DESC, s.set_num, limit input to 10 row(s) per chunk  (actual time=111..111 rows=10 loops=1)
+        -> Stream results  (cost=10787 rows=0) (actual time=103..111 rows=12 loops=1)
+            -> Nested loop inner join  (cost=10787 rows=0) (actual time=103..111 rows=12 loops=1)
+                -> Nested loop inner join  (cost=7428 rows=0) (actual time=103..111 rows=12 loops=1)
+                    -> Nested loop inner join  (cost=3362 rows=0) (actual time=103..111 rows=13 loops=1)
+                        -> Table scan on m  (cost=2.5..2.5 rows=0) (actual time=103..104 rows=14674 loops=1)
+                            -> Materialize CTE matched  (cost=0..0 rows=0) (actual time=103..103 rows=14674 loops=1)
+                                -> Table scan on <temporary>  (actual time=102..103 rows=14674 loops=1)
+                                    -> Aggregate using temporary table  (actual time=102..102 rows=14674 loops=1)
+                                        -> Nested loop inner join  (cost=2431 rows=13437) (actual time=0.0153..53.6 rows=257405 loops=1)
+                                            -> Index lookup on o using PRIMARY (user_id=(@user_id))  (cost=90.3 rows=898) (actual time=0.00967..0.143 rows=898 loops=1)
+                                            -> Covering index lookup on ip using idx_inventory_parts_part_color (part_num=o.part_num, color_id=o.color_id, is_spare=0)  (cost=1.11 rows=15) (actual time=0.00427..0.0512 rows=287 loops=898)
+                        -> Filter: ((it.lots - m.lots_covered) = 0)  (cost=0.25 rows=1) (actual time=456e-6..456e-6 rows=886e-6 loops=14674)
+                            -> Single-row index lookup on it using PRIMARY (inventory_id=m.inventory_id)  (cost=0.25 rows=1) (actual time=334e-6..349e-6 rows=1 loops=14674)
+                    -> Filter: (i.version = (select #4))  (cost=0.303 rows=1) (actual time=0.00535..0.00539 rows=0.923 loops=13)
+                        -> Single-row index lookup on i using PRIMARY (id=m.inventory_id)  (cost=0.303 rows=1) (actual time=0.00146..0.00147 rows=1 loops=13)
                         -> Select #4 (subquery in condition; dependent)
-                            -> Aggregate: max(i2.version)  (cost=0.681 rows=1) (actual time=0.00341..0.00342 rows=1 loops=13)
-                                -> Covering index lookup on i2 using uq_inventories_set_version (set_num=i.set_num)  (cost=0.57 rows=1.12) (actual time=0.00273..0.00302 rows=1.31 loops=13)
-                -> Single-row index lookup on s using PRIMARY (set_num=i.set_num)  (cost=0.25 rows=1) (actual time=0.00171..0.00173 rows=1 loops=12)
+                            -> Aggregate: max(i2.version)  (cost=0.557 rows=1) (actual time=0.00251..0.00254 rows=1 loops=13)
+                                -> Covering index lookup on i2 using uq_inventories_set_version (set_num=i.set_num)  (cost=0.457 rows=1) (actual time=0.00188..0.00217 rows=1.31 loops=13)
+                -> Single-row index lookup on s using PRIMARY (set_num=i.set_num)  (cost=0.25 rows=1) (actual time=0.00151..0.00152 rows=1 loops=12)
 
 
 ================================================================================
-Feature 3, almost-buildable sets (app query) (150.0 ms)
+Feature 3, almost-buildable sets (app query) (143.9 ms)
 ================================================================================
--> Limit: 10 row(s)  (actual time=168..168 rows=10 loops=1)
-    -> Sort: `(m.pieces_owned / it.pieces)` DESC, cov.lots_missing, s.set_num, limit input to 10 row(s) per chunk  (actual time=168..168 rows=10 loops=1)
-        -> Stream results  (cost=11338 rows=0) (actual time=107..165 rows=12718 loops=1)
-            -> Nested loop inner join  (cost=11338 rows=0) (actual time=107..160 rows=12718 loops=1)
-                -> Nested loop inner join  (cost=7560 rows=0) (actual time=107..146 rows=13606 loops=1)
-                    -> Nested loop inner join  (cost=3781 rows=0) (actual time=107..117 rows=14661 loops=1)
-                        -> Table scan on m  (cost=2.5..2.5 rows=0) (actual time=107..108 rows=14674 loops=1)
-                            -> Materialize CTE matched  (cost=0..0 rows=0) (actual time=107..107 rows=14674 loops=1)
-                                -> Table scan on <temporary>  (actual time=106..107 rows=14674 loops=1)
-                                    -> Aggregate using temporary table  (actual time=106..106 rows=14674 loops=1)
-                                        -> Nested loop inner join  (cost=2429 rows=15114) (actual time=0.0179..55.7 rows=257405 loops=1)
-                                            -> Index lookup on o using PRIMARY (user_id=(@user_id))  (cost=90.3 rows=898) (actual time=0.0101..0.162 rows=898 loops=1)
-                                            -> Covering index lookup on ip using idx_inventory_parts_part_color (part_num=o.part_num, color_id=o.color_id, is_spare=0)  (cost=0.923 rows=16.8) (actual time=0.00554..0.0535 rows=287 loops=898)
-                        -> Filter: ((it.lots - m.lots_covered) > 0)  (cost=0.25 rows=1) (actual time=529e-6..570e-6 rows=0.999 loops=14674)
-                            -> Single-row index lookup on it using PRIMARY (inventory_id=m.inventory_id)  (cost=0.25 rows=1) (actual time=424e-6..438e-6 rows=1 loops=14674)
-                    -> Filter: (i.version = (select #4))  (cost=0.25 rows=1) (actual time=0.00183..0.00187 rows=0.928 loops=14661)
-                        -> Single-row index lookup on i using PRIMARY (id=m.inventory_id)  (cost=0.25 rows=1) (actual time=467e-6..482e-6 rows=1 loops=14661)
+-> Limit: 10 row(s)  (actual time=161..161 rows=10 loops=1)
+    -> Sort: `(m.pieces_owned / it.pieces)` DESC, cov.lots_missing, s.set_num, limit input to 10 row(s) per chunk  (actual time=161..161 rows=10 loops=1)
+        -> Stream results  (cost=10080 rows=0) (actual time=103..158 rows=12718 loops=1)
+            -> Nested loop inner join  (cost=10080 rows=0) (actual time=103..152 rows=12718 loops=1)
+                -> Nested loop inner join  (cost=6721 rows=0) (actual time=103..140 rows=13606 loops=1)
+                    -> Nested loop inner join  (cost=3362 rows=0) (actual time=103..112 rows=14661 loops=1)
+                        -> Table scan on m  (cost=2.5..2.5 rows=0) (actual time=103..104 rows=14674 loops=1)
+                            -> Materialize CTE matched  (cost=0..0 rows=0) (actual time=103..103 rows=14674 loops=1)
+                                -> Table scan on <temporary>  (actual time=102..102 rows=14674 loops=1)
+                                    -> Aggregate using temporary table  (actual time=102..102 rows=14674 loops=1)
+                                        -> Nested loop inner join  (cost=2431 rows=13437) (actual time=0.017..53.4 rows=257405 loops=1)
+                                            -> Index lookup on o using PRIMARY (user_id=(@user_id))  (cost=90.3 rows=898) (actual time=0.01..0.137 rows=898 loops=1)
+                                            -> Covering index lookup on ip using idx_inventory_parts_part_color (part_num=o.part_num, color_id=o.color_id, is_spare=0)  (cost=1.11 rows=15) (actual time=0.00437..0.0511 rows=287 loops=898)
+                        -> Filter: ((it.lots - m.lots_covered) > 0)  (cost=0.25 rows=1) (actual time=477e-6..519e-6 rows=0.999 loops=14674)
+                            -> Single-row index lookup on it using PRIMARY (inventory_id=m.inventory_id)  (cost=0.25 rows=1) (actual time=376e-6..390e-6 rows=1 loops=14674)
+                    -> Filter: (i.version = (select #4))  (cost=0.25 rows=1) (actual time=0.00176..0.0018 rows=0.928 loops=14661)
+                        -> Single-row index lookup on i using PRIMARY (id=m.inventory_id)  (cost=0.25 rows=1) (actual time=439e-6..454e-6 rows=1 loops=14661)
                         -> Select #4 (subquery in condition; dependent)
-                            -> Aggregate: max(i2.version)  (cost=0.474 rows=1) (actual time=0.00116..0.00118 rows=1 loops=14661)
-                                -> Covering index lookup on i2 using uq_inventories_set_version (set_num=i.set_num)  (cost=0.362 rows=1.12) (actual time=849e-6..0.00103 rows=1.19 loops=14661)
-                -> Single-row index lookup on s using PRIMARY (set_num=i.set_num)  (cost=0.25 rows=1) (actual time=955e-6..968e-6 rows=0.935 loops=13606)
+                            -> Aggregate: max(i2.version)  (cost=0.45 rows=1) (actual time=0.00113..0.00114 rows=1 loops=14661)
+                                -> Covering index lookup on i2 using uq_inventories_set_version (set_num=i.set_num)  (cost=0.35 rows=1) (actual time=814e-6..997e-6 rows=1.19 loops=14661)
+                -> Single-row index lookup on s using PRIMARY (set_num=i.set_num)  (cost=0.25 rows=1) (actual time=860e-6..873e-6 rows=0.935 loops=13606)
 
 
 ================================================================================
-Feature 3, report's NOT EXISTS template (for comparison) (406.6 ms)
+Feature 3, report's NOT EXISTS template (for comparison) (366.8 ms)
 ================================================================================
--> Aggregate: count(0)  (cost=150387 rows=1) (actual time=452..452 rows=1 loops=1)
-    -> Nested loop antijoin  (cost=134363 rows=160235) (actual time=51.5..452 rows=12 loops=1)
-        -> Nested loop inner join  (cost=118339 rows=3302) (actual time=0.11..368 rows=19898 loops=1)
-            -> Nested loop inner join  (cost=77950 rows=3302) (actual time=0.1..288 rows=39117 loops=1)
-                -> Remove duplicates from input sorted on PRIMARY  (cost=34399 rows=3302) (actual time=0.0968..271 rows=39117 loops=1)
-                    -> Filter: (r.is_spare = 0)  (cost=34399 rows=3302) (actual time=0.0965..247 rows=1.46e+6 loops=1)
-                        -> Covering index scan on r using PRIMARY  (cost=34399 rows=1.6e+6) (actual time=0.0958..203 rows=1.57e+6 loops=1)
-                -> Single-row index lookup on i using PRIMARY (id=r.inventory_id)  (cost=43221 rows=1) (actual time=360e-6..374e-6 rows=1 loops=39117)
-            -> Filter: (i.version = (select #2))  (cost=40059 rows=1) (actual time=0.00196..0.00198 rows=0.509 loops=39117)
-                -> Single-row covering index lookup on s using PRIMARY (set_num=i.set_num)  (cost=40059 rows=1) (actual time=999e-6..0.00101 rows=0.558 loops=39117)
+-> Aggregate: count(0)  (cost=166065 rows=1) (actual time=440..440 rows=1 loops=1)
+    -> Nested loop antijoin  (cost=150004 rows=160608) (actual time=47.3..440 rows=12 loops=1)
+        -> Nested loop inner join  (cost=133943 rows=4671) (actual time=0.12..359 rows=19898 loops=1)
+            -> Nested loop inner join  (cost=93324 rows=4671) (actual time=0.114..286 rows=39117 loops=1)
+                -> Remove duplicates from input sorted on PRIMARY  (cost=36855 rows=4671) (actual time=0.112..270 rows=39117 loops=1)
+                    -> Filter: (r.is_spare = 0)  (cost=36855 rows=4671) (actual time=0.111..247 rows=1.46e+6 loops=1)
+                        -> Covering index scan on r using PRIMARY  (cost=36855 rows=1.61e+6) (actual time=0.111..202 rows=1.57e+6 loops=1)
+                -> Single-row index lookup on i using PRIMARY (id=r.inventory_id)  (cost=56002 rows=1) (actual time=336e-6..350e-6 rows=1 loops=39117)
+            -> Filter: (i.version = (select #2))  (cost=40152 rows=1) (actual time=0.00176..0.00178 rows=0.509 loops=39117)
+                -> Single-row covering index lookup on s using PRIMARY (set_num=i.set_num)  (cost=40152 rows=1) (actual time=881e-6..889e-6 rows=0.558 loops=39117)
                 -> Select #2 (subquery in condition; dependent)
-                    -> Aggregate: max(i2.version)  (cost=0.574 rows=1) (actual time=0.00145..0.00147 rows=1 loops=21825)
-                        -> Covering index lookup on i2 using uq_inventories_set_version (set_num=s.set_num)  (cost=0.462 rows=1.12) (actual time=0.0011..0.00131 rows=1.34 loops=21825)
-        -> Filter: ((required.is_spare = 0) and (required.quantity > coalesce((select #5),0)))  (cost=268 rows=48.5) (actual time=0.00418..0.00418 rows=0.999 loops=19898)
-            -> Index lookup on required using PRIMARY (inventory_id=r.inventory_id)  (cost=268 rows=48.5) (actual time=0.0027..0.00272 rows=1.14 loops=19898)
+                    -> Aggregate: max(i2.version)  (cost=0.543 rows=1) (actual time=0.00133..0.00134 rows=1 loops=21825)
+                        -> Covering index lookup on i2 using uq_inventories_set_version (set_num=s.set_num)  (cost=0.443 rows=1) (actual time=0.001..0.00119 rows=1.34 loops=21825)
+        -> Filter: ((required.is_spare = 0) and (required.quantity > coalesce((select #5),0)))  (cost=143 rows=34.4) (actual time=0.00406..0.00406 rows=0.999 loops=19898)
+            -> Index lookup on required using PRIMARY (inventory_id=r.inventory_id)  (cost=143 rows=34.4) (actual time=0.00266..0.00268 rows=1.14 loops=19898)
             -> Select #5 (subquery in condition; dependent)
-                -> Aggregate: sum(owned.quantity)  (cost=0.45 rows=1) (actual time=0.00106..0.00108 rows=1 loops=22235)
-                    -> Single-row index lookup on owned using PRIMARY (user_id=(@user_id), part_num=required.part_num, color_id=required.color_id)  (cost=0.35 rows=1) (actual time=984e-6..986e-6 rows=0.127 loops=22235)
+                -> Aggregate: sum(owned.quantity)  (cost=0.45 rows=1) (actual time=0.00102..0.00103 rows=1 loops=22235)
+                    -> Single-row index lookup on owned using PRIMARY (user_id=(@user_id), part_num=required.part_num, color_id=required.color_id)  (cost=0.35 rows=1) (actual time=943e-6..944e-6 rows=0.127 loops=22235)
 
 
 ================================================================================
 Feature 4, completed sets (0.1 ms)
 ================================================================================
--> Nested loop inner join  (cost=1.4 rows=2) (actual time=0.00396..0.00475 rows=2 loops=1)
-    -> Sort: ucs.completed_at DESC  (cost=0.7 rows=2) (actual time=0.00262..0.00267 rows=2 loops=1)
-        -> Index lookup on ucs using PRIMARY (user_id=(@user_id))  (cost=0.7 rows=2) (actual time=0.00121..0.00158 rows=2 loops=1)
-    -> Single-row index lookup on s using PRIMARY (set_num=ucs.set_num)  (cost=0.3 rows=1) (actual time=875e-6..896e-6 rows=1 loops=2)
+-> Nested loop inner join  (cost=1.4 rows=2) (actual time=0.004..0.00479 rows=2 loops=1)
+    -> Sort: ucs.completed_at DESC  (cost=0.7 rows=2) (actual time=0.00246..0.0025 rows=2 loops=1)
+        -> Index lookup on ucs using PRIMARY (user_id=(@user_id))  (cost=0.7 rows=2) (actual time=0.00108..0.00146 rows=2 loops=1)
+    -> Single-row index lookup on s using PRIMARY (set_num=ucs.set_num)  (cost=0.3 rows=1) (actual time=958e-6..958e-6 rows=1 loops=2)
 
 
 ================================================================================
-Feature 5, related parts (0.4 ms)
+Feature 5, related parts (0.3 ms)
 ================================================================================
--> Limit: 10 row(s)  (cost=163..163 rows=10) (actual time=0.18..0.18 rows=10 loops=1)
-    -> Sort: field(rel_type,'P','T','M','A','B','R'), `role` DESC, part_num, limit input to 10 row(s) per chunk  (cost=163..163 rows=10) (actual time=0.179..0.18 rows=10 loops=1)
-        -> Table scan on <union temporary>  (cost=146..150 rows=101) (actual time=0.152..0.158 rows=100 loops=1)
-            -> Union all materialize  (cost=146..146 rows=101) (actual time=0.152..0.152 rows=100 loops=1)
-                -> Nested loop inner join  (cost=2.27 rows=1) (actual time=0.00396..0.00396 rows=0 loops=1)
-                    -> Nested loop inner join  (cost=1.92 rows=1) (actual time=0.00371..0.00371 rows=0 loops=1)
-                        -> Covering index lookup on r using child_part_num (child_part_num='3001')  (cost=1.08 rows=1) (actual time=0.00354..0.00354 rows=0 loops=1)
-                        -> Single-row index lookup on p using PRIMARY (part_num=r.parent_part_num)  (cost=0.832 rows=1) (never executed)
+-> Limit: 10 row(s)  (cost=163..163 rows=10) (actual time=0.169..0.17 rows=10 loops=1)
+    -> Sort: field(rel_type,'P','T','M','A','B','R'), `role` DESC, part_num, limit input to 10 row(s) per chunk  (cost=163..163 rows=10) (actual time=0.169..0.169 rows=10 loops=1)
+        -> Table scan on <union temporary>  (cost=146..149 rows=101) (actual time=0.148..0.153 rows=100 loops=1)
+            -> Union all materialize  (cost=146..146 rows=101) (actual time=0.148..0.148 rows=100 loops=1)
+                -> Nested loop inner join  (cost=1.8 rows=1) (actual time=0.00242..0.00242 rows=0 loops=1)
+                    -> Nested loop inner join  (cost=1.45 rows=1) (actual time=0.00225..0.00225 rows=0 loops=1)
+                        -> Covering index lookup on r using child_part_num (child_part_num='3001')  (cost=0.62 rows=1) (actual time=0.00221..0.00221 rows=0 loops=1)
+                        -> Single-row index lookup on p using PRIMARY (part_num=r.parent_part_num)  (cost=0.831 rows=1) (never executed)
                     -> Single-row index lookup on c using PRIMARY (id=p.part_cat_id)  (cost=0.35 rows=1) (never executed)
-                -> Nested loop inner join  (cost=134 rows=100) (actual time=0.0239..0.126 rows=100 loops=1)
-                    -> Nested loop inner join  (cost=98.8 rows=100) (actual time=0.0226..0.11 rows=100 loops=1)
-                        -> Covering index lookup on r using parent_part_num (parent_part_num='3001')  (cost=15.6 rows=100) (actual time=0.0193..0.0343 rows=100 loops=1)
-                        -> Single-row index lookup on p using PRIMARY (part_num=r.child_part_num)  (cost=0.733 rows=1) (actual time=660e-6..677e-6 rows=1 loops=100)
-                    -> Single-row index lookup on c using PRIMARY (id=p.part_cat_id)  (cost=0.251 rows=1) (actual time=60e-6..75.4e-6 rows=1 loops=100)
+                -> Nested loop inner join  (cost=134 rows=100) (actual time=0.00671..0.115 rows=100 loops=1)
+                    -> Nested loop inner join  (cost=98.6 rows=100) (actual time=0.00571..0.0978 rows=100 loops=1)
+                        -> Covering index lookup on r using parent_part_num (parent_part_num='3001')  (cost=15.6 rows=100) (actual time=0.00404..0.0192 rows=100 loops=1)
+                        -> Single-row index lookup on p using PRIMARY (part_num=r.child_part_num)  (cost=0.732 rows=1) (actual time=677e-6..695e-6 rows=1 loops=100)
+                    -> Single-row index lookup on c using PRIMARY (id=p.part_cat_id)  (cost=0.251 rows=1) (actual time=60.5e-6..74.6e-6 rows=1 loops=100)
 

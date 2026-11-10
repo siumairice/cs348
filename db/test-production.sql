@@ -43,38 +43,58 @@ SELECT
     (SELECT COUNT(*) FROM user_completed_sets WHERE user_id = @user_id) AS completed_sets;
 
 -- ---------------------------------------------------------------------------
--- Feature 1 (R6): sets that contain a given part in a given colour.
+-- Feature 1 (R6): sets that contain a given part in a given colour
+-- (GET /api/parts/{part_num}/colors and GET /api/parts/{part_num}/sets).
 -- Input: part 3001 (Brick 2 x 4) in colour 4 (Red).
 -- ---------------------------------------------------------------------------
 SELECT 'Feature 1: sets containing part 3001 in Red (colour 4)' AS feature;
 
-SELECT COUNT(DISTINCT s.set_num) AS total_sets
-FROM
-    sets AS s
-    JOIN inventories AS i ON i.set_num = s.set_num
-    JOIN inventory_parts AS ip ON ip.inventory_id = i.id
-WHERE
-    ip.part_num = '3001'
-    AND ip.color_id = 4
-    AND ip.is_spare = 0;
+-- The colour drop-down: colours the part comes in, with set counts (top 10 of 80).
+-- plan: Feature 1, colours a part comes in
+SELECT
+    c.id,
+    c.name,
+    c.rgb,
+    COUNT(DISTINCT s.set_num) AS set_count
+FROM inventory_parts ip
+JOIN inventories i ON i.id = ip.inventory_id
+JOIN sets s ON s.set_num = i.set_num
+JOIN colors c ON c.id = ip.color_id
+WHERE ip.part_num = '3001'
+  AND ip.is_spare = 0
+GROUP BY c.id, c.name, c.rgb
+ORDER BY set_count DESC, c.name
+LIMIT 10;
 
--- plan: Feature 1, sets containing a part in a colour
+-- plan: Feature 1, count sets containing a part in a colour
+SELECT COUNT(DISTINCT s.set_num) AS total
+FROM sets AS s
+JOIN inventories AS i ON i.set_num = s.set_num
+JOIN inventory_parts AS ip ON ip.inventory_id = i.id
+LEFT JOIN themes AS t ON t.id = s.theme_id
+LEFT JOIN themes AS parent ON parent.id = t.parent_id
+WHERE ip.part_num = '3001'
+  AND ip.color_id = 4
+  AND ip.is_spare = 0;
+
+-- plan: Feature 1, first page of sets containing a part in a colour
 SELECT DISTINCT
     s.set_num,
     s.name,
-    s.year
-FROM
-    sets AS s
-    JOIN inventories AS i ON i.set_num = s.set_num
-    JOIN inventory_parts AS ip ON ip.inventory_id = i.id
-WHERE
-    ip.part_num = '3001'
-    AND ip.color_id = 4
-    AND ip.is_spare = 0
-ORDER BY
-    s.year DESC,
-    s.set_num
-LIMIT 10;
+    s.year,
+    s.num_parts,
+    t.name AS theme_name,
+    parent.name AS parent_theme_name
+FROM sets AS s
+JOIN inventories AS i ON i.set_num = s.set_num
+JOIN inventory_parts AS ip ON ip.inventory_id = i.id
+LEFT JOIN themes AS t ON t.id = s.theme_id
+LEFT JOIN themes AS parent ON parent.id = t.parent_id
+WHERE ip.part_num = '3001'
+  AND ip.color_id = 4
+  AND ip.is_spare = 0
+ORDER BY s.year DESC, s.set_num
+LIMIT 10 OFFSET 0;
 
 -- ---------------------------------------------------------------------------
 -- Feature 2 (R7): search sets by theme and minimum piece count (GET /api/sets).
