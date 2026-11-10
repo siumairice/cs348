@@ -116,3 +116,43 @@ export const markCompleted = (setNum: string) =>
 
 export const removeCompleted = (setNum: string) =>
   send("DELETE", `/api/completed/${encodeURIComponent(setNum)}`);
+
+export type PartSummary = {
+  part_num: string;
+  name: string;
+  category_name: string;
+  related_count: number;
+};
+
+export type RelType = "P" | "T" | "M" | "A" | "B" | "R";
+
+export type RelatedPart = {
+  rel_type: RelType;
+  // Which side of the relationship the requested part is on.
+  role: "child" | "parent";
+  part_num: string;
+  name: string;
+  category_name: string;
+};
+
+export type PartDetail = {
+  part: {
+    part_num: string;
+    name: string;
+    part_material: string | null;
+    category_id: number;
+    category_name: string;
+  };
+  total: number;
+  limit: number;
+  offset: number;
+  // Totals per relationship group, across all pages.
+  counts: { rel_type: RelType; role: RelatedPart["role"]; count: number }[];
+  related: RelatedPart[];
+};
+
+export const searchParts = (q?: string) =>
+  get<{ parts: PartSummary[] }>("/api/parts", { q });
+
+export const getPart = (partNum: string, params?: { limit?: string; offset?: string }) =>
+  get<PartDetail>(`/api/parts/${encodeURIComponent(partNum)}`, params);

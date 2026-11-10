@@ -93,3 +93,36 @@ export function ApiError() {
     </div>
   );
 }
+
+type PartRow = { part_num: string; name: string; category_name: string; related_count?: number };
+
+// Each row is a single link so clicking anywhere on it opens the part.
+export function PartList({ parts, showCount = false }: { parts: PartRow[]; showCount?: boolean }) {
+  const cols = showCount
+    ? "grid-cols-[9rem_minmax(0,1fr)_12rem_5rem]"
+    : "grid-cols-[9rem_minmax(0,1fr)_12rem]";
+  return (
+    <div className="card overflow-x-auto text-sm">
+      <div className="min-w-[36rem]">
+        <div className={`grid ${cols} text-left text-xs uppercase tracking-wide text-muted`}>
+          <div className="px-4 py-2">Part</div>
+          <div className="px-4 py-2">Name</div>
+          <div className="px-4 py-2">Category</div>
+          {showCount && <div className="px-4 py-2 text-right">Related</div>}
+        </div>
+        {parts.map((part, i) => (
+          <Link
+            key={`${part.part_num}:${i}`}
+            href={`/parts/${encodeURIComponent(part.part_num)}`}
+            className={`grid ${cols} border-t border-border hover:bg-accent-soft hover:text-accent`}
+          >
+            <div className="px-4 py-2 font-mono">{part.part_num}</div>
+            <div className="px-4 py-2">{part.name}</div>
+            <div className="px-4 py-2 text-muted">{part.category_name}</div>
+            {showCount && <div className="px-4 py-2 text-right tabular-nums">{part.related_count}</div>}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}

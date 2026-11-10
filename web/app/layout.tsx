@@ -22,6 +22,7 @@ const NAV = [
   { href: "/", label: "Overview" },
   { href: "/sets", label: "Sets" },
   { href: "/themes", label: "Themes" },
+  { href: "/parts", label: "Parts" },
   { href: "/completed", label: "My Completed Sets" },
 ];
 

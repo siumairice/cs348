@@ -17,5 +17,9 @@ set_num         name                            completed_at
 COMCON002-1     Indiana Jones Brickmaster Pack  2026-10-15 10:00:00
 
 Query 5
+rel_type        role    part_num        name
+M               parent  14395           Brick Arch 1 x 5 x 4 [Continuous Bow, Raised Underside Cross Supports]
+
+Query 6
 set_num         name                            completed_at
 COMCON002-1     Indiana Jones Brickmaster Pack  2026-10-15 10:00:00

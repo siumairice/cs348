@@ -39,9 +39,8 @@ services:
       DB_NAME: lego_sets
       DATA_DIR: /data
     volumes:
-      - ./data/subset:/data:ro
-      # - ./data:/data:ro
-    command: python db/import_sample.py
+      - ./data:/data:ro
+    command: python db/import_data.py
     restart: "no"
   app:
     build: .
