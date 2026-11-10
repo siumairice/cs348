@@ -18,7 +18,7 @@ Feature numbers match the report (R6 to R10). Four of the five are implemented.
 
 | # | Feature | Status | Where in the app | Implementation |
 | --- | --- | --- | --- | --- |
-| 1 (R6) | Find sets that contain a given part in a given colour | Not implemented yet. The query is in `db/test-sample.sql` (Query 1) | | |
+| 1 (R6) | Find sets that contain a given part in a given colour | Not implemented in the app yet. The query is tested in `db/test-sample.sql` and `db/test-production.sql` | | |
 | 2 (R7) | Search sets by theme and piece count | Implemented | **Sets** (`/sets`): theme drop-down, min/max pieces, year range, name search, sorting, pagination | `list_sets` in `app.py`; `web/app/sets/page.tsx` |
 | 3 (R8) | Find sets the user can build with their pieces | Implemented | **My Parts** (`/my-parts`) to enter pieces, or **I own this set** on a set page; **What Can I Build** (`/build`) for buildable and nearly buildable sets | `list_user_parts`, `add_user_part`, `remove_user_part`, `add_set_parts`, `list_buildable_sets`, and `BUILDABLE_SQL` in `app.py`; `inventory_totals` in `db/schema.sql`; `web/app/my-parts/`, `web/app/build/page.tsx` |
 | 4 (R9) | Mark sets as completed and list them | Implemented | **Mark as Completed** / **Remove** on a set page; **My Completed Sets** (`/completed`) | `list_completed`, `mark_completed`, `remove_completed` in `app.py`; `web/app/completed/` |
@@ -149,6 +149,22 @@ docker compose run --rm -e FORCE_IMPORT=1 importer
 | `colors` | 275 |
 | `part_categories` | 76 |
 
+### Production queries
+
+`db/test-production.sql` runs the app's query for each feature on the production dataset, with fixed inputs and the top 10 rows of long results, plus a count of the full result. It creates a separate `production_user` (who owns every part of Rivendell, 10316-1, and has completed two sets), so the website's demo user is not touched, and removes it at the end so it can be re-run. With the production data loaded:
+
+```bash
+docker compose exec -T db mysql -uroot -pcs348pass --default-character-set=utf8mb4 --table lego_sets < db/test-production.sql
+```
+
+Compare the output with `db/test-production.out`.
+
+Query plans and timings (median of 5 runs, plus `EXPLAIN ANALYZE`) for the same queries are in `db/test-production-plans.out`. `db/explain_production.py` regenerates them. It reads the queries tagged `-- plan:` in `db/test-production.sql`, so the timed queries are always the ones in the test file:
+
+```bash
+docker compose exec -T app python db/explain_production.py > db/test-production-plans.out
+```
+
 One mismatch in the data: about 17,000 rows in `inventories` (and some in `set_mappings`) belong to minifigs (`fig-...`) rather than sets. Their `set_num` column therefore has no foreign key to `sets`. Feature queries join `inventories` to `sets`, which leaves the minifig rows out.
 
 ## API endpoints
@@ -186,6 +202,10 @@ db/
   download_data.sh     downloads the latest production CSVs from Rebrickable
   test-sample.sql      one query per feature, for the sample database
   test-sample.out      expected output of test-sample.sql on the sample database
+  test-production.sql  the feature queries on the production dataset
+  test-production.out  output of test-production.sql
+  explain_production.py         times test-production.sql's queries and records their plans
+  test-production-plans.out     timings and EXPLAIN ANALYZE plans on the production dataset
 src/
   index.html           plain HTML test page served by FastAPI at /
 web/                   Next.js frontend (App Router, TypeScript, Tailwind)

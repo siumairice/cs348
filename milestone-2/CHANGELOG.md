@@ -82,3 +82,21 @@ Users can record the parts they own and see which sets they can build with them.
 - Documented where the production data comes from, how to download it, what `db/import_data.py` checks and transforms, and the row count of every table.
 - Added `db/download_data.sh`, which downloads and unzips the latest 15 Rebrickable CSVs. A fresh export imports cleanly with foreign key checks on.
 
+## Production queries (C4)
+
+- Added `db/test-production.sql`, which runs the app's query for features 1 to 5 on the production dataset, and `db/test-production.out`, its output. Long results show the top 10 rows plus a count of the full result.
+- The script uses its own `production_user` (owns every part of Rivendell, completed two sets on fixed dates) and deletes it at the end, so the output is identical on every run and the website's demo user is untouched.
+- It also runs the report's `NOT EXISTS` form of Feature 3 as a cross-check. Both forms find the same 12 buildable sets.
+- Added `db/explain_production.py` and `db/test-production-plans.out`: the median time of 5 runs and the `EXPLAIN ANALYZE` plan for each query tagged `-- plan:` in `db/test-production.sql`.
+
+| Query | Median | Plan |
+| --- | ---: | --- |
+| Feature 1: sets containing a part in a colour | 1.5 ms | Covering lookup on `idx_inventory_parts_part_color` (1,011 matching inventories) |
+| Feature 2: count matching sets | 3.2 ms | Full scan of `sets` (28,547 rows). The theme-or-subtheme `OR` prevents index use, but the table is small |
+| Feature 2: first page of matching sets | 4.9 ms | Same scan, then a sort of the 19 matches |
+| Feature 3: buildable sets (app query) | 99 ms | Starts from the user's 898 lots, a covering lookup per lot, then `inventory_totals` by primary key |
+| Feature 3: almost-buildable sets | 150 ms | Same plan, sorted by coverage |
+| Feature 3: report's `NOT EXISTS` template | 407 ms | Scans all 1.57M `inventory_parts` rows |
+| Feature 4: completed sets | 0.1 ms | Primary-key lookup on `user_completed_sets` |
+| Feature 5: related parts | 0.4 ms | Lookups on the `child_part_num` and `parent_part_num` foreign key indexes |
+

@@ -1,0 +1,140 @@
++------------+--------------+----------------+
+| owned_lots | owned_pieces | completed_sets |
++------------+--------------+----------------+
+|        898 |         6088 |              2 |
++------------+--------------+----------------+
++--------------------------------------------------------+
+| feature                                                |
++--------------------------------------------------------+
+| Feature 1: sets containing part 3001 in Red (colour 4) |
++--------------------------------------------------------+
++------------+
+| total_sets |
++------------+
+|       1011 |
++------------+
++-----------+----------------------------------+------+
+| set_num   | name                             | year |
++-----------+----------------------------------+------+
+| 11045-1   | Creative Colorful Bricks         | 2026 |
+| 11370-1   | Stranger Things: The Creel House | 2026 |
+| 11378-1   | Douglas DC-3 PAN AM Airliner     | 2026 |
+| 11513-1   | Dark Flower Arrangement          | 2026 |
+| 31376-1   | Cute Hamster with a Flower       | 2026 |
+| 4000049-1 | Vintage LEGO Logo                | 2026 |
+| 40868-1   | Up-Scaled Red Minifigure         | 2026 |
+| 40874-1   | Santa's Holiday Countdown        | 2026 |
+| 40875-1   | Up-Scaled Mrs. Claus Minifigure  | 2026 |
+| 40885-1   | Duck Family                      | 2026 |
++-----------+----------------------------------+------+
++------------------------------------------------------------+
+| feature                                                    |
++------------------------------------------------------------+
+| Feature 2: Space (theme 126) sets with at least 500 pieces |
++------------------------------------------------------------+
++-----+-------+-----------+
+| id  | name  | parent_id |
++-----+-------+-----------+
+| 126 | Space |      NULL |
+| 422 | Space |       411 |
+| 793 | Space |        52 |
++-----+-------+-----------+
++-------+
+| total |
++-------+
+|    19 |
++-------+
++---------+------------------------------+------+-----------+------------------+-------------------+
+| set_num | name                         | year | num_parts | theme_name       | parent_theme_name |
++---------+------------------------------+------+-----------+------------------+-------------------+
+| 6989-1  | Mega Core Magnetizer         | 1990 |       506 | M:Tron           | Space             |
+| 70704-1 | Vermin Vaporizer             | 2013 |       506 | Galaxy Squad     | Space             |
+| 70708-1 | Hive Crawler                 | 2013 |       559 | Galaxy Squad     | Space             |
+| 6987-2  | Message Intercept Base       | 1988 |       573 | Blacktron I      | Space             |
+| 6991-1  | Monorail Transport Base      | 1994 |       573 | Unitron          | Space             |
+| 6987-1  | Message Intercept Base       | 1988 |       575 | Blacktron I      | Space             |
+| 7645-1  | MT-61 Crystal Reaper         | 2008 |       600 | Mars Mission     | Space             |
+| 5985-1  | Space Police Central         | 2010 |       631 | Space Police III | Space             |
+| 7699-1  | MT-101 Armored Drilling Unit | 2007 |       635 | Mars Mission     | Space             |
+| 6982-1  | Explorien Starship           | 1996 |       662 | Exploriens       | Space             |
++---------+------------------------------+------+-----------+------------------+-------------------+
++----------------------------------------------------------------------+
+| feature                                                              |
++----------------------------------------------------------------------+
+| Feature 3: sets production_user can build (owns all Rivendell parts) |
++----------------------------------------------------------------------+
++--------------+--------------------------------------------------------------------------------+------+-----------------+--------------+--------------+
+| set_num      | name                                                                           | year | pieces_required | pieces_owned | lots_missing |
++--------------+--------------------------------------------------------------------------------+------+-----------------+--------------+--------------+
+| 10316-1      | Lord of the Rings: Rivendell                                                   | 2023 |            6088 |         6088 |            0 |
+| 12201420-1   | The LEGO Ninjago Movie: Garmageddon in Ninjago City!                           | 2017 |               4 |            4 |            0 |
+| 5009938-1    | Ninjago: Dragons Rising: Adventure Atlas: Journey Through the World of Ninjago | 2025 |               4 |            4 |            0 |
+| COMCON031-1  | Azog                                                                           | 2013 |               3 |            3 |            0 |
+| 5000196304-1 | The Hobbit - The Battle of the Five Armies (Blu-ray with Minifigures)          | 2015 |               1 |            1 |            0 |
+| 5007289-1    | Brick Scooper Set                                                              | 2021 |               1 |            1 |            0 |
+| 5010102-1    | Pen Pal Gel Pen with Minifigure (Blue)                                         | 2025 |               1 |            1 |            0 |
+| 630-3        | Brick Separator Orange                                                         | 2012 |               1 |            1 |            0 |
+| 80741919-1   | Ninjago: Ninja vs. Hypnobrai                                                   | 2012 |               1 |            1 |            0 |
+| 8613-1       | Kanoka Disk Launcher Pack                                                      | 2004 |               1 |            1 |            0 |
++--------------+--------------------------------------------------------------------------------+------+-----------------+--------------+--------------+
++-----------------+---------------------------------------------------------------------+------+-----------------+--------------+--------------+
+| set_num         | name                                                                | year | pieces_required | pieces_owned | lots_missing |
++-----------------+---------------------------------------------------------------------+------+-----------------+--------------+--------------+
+| CAPITOL-1       | Capitol Building                                                    | 2015 |              36 |           30 |            3 |
+| 9788325347215-1 | Ninjago: Dragons Rising: The Heat is On                             | 2025 |               5 |            4 |            1 |
+| MMMB036-1       | Watering Can                                                        | 2011 |              57 |           44 |            7 |
+| 5006373-1       | Display Night Light with Set 30545-1                                | 2019 |               4 |            3 |            1 |
+| LGLNI25-1       | Display Night Light with Set 30548-1                                | 2020 |               4 |            3 |            1 |
+| 662204-1        | Miner with Creeper and Ores                                         | 2022 |              20 |           15 |            5 |
+| STORMBREAKER-1  | Stormbreaker                                                        | 2019 |              27 |           20 |            3 |
+| MMMB019-1       | Groundhog                                                           | 2010 |              38 |           28 |            8 |
+| MMMB031-1       | Fire Place                                                          | 2010 |              41 |           30 |            8 |
+| Newark-1        | LEGO Store Grand Opening Exclusive Set, Christiana Mall, Newark, DE | 2010 |             133 |           96 |           13 |
++-----------------+---------------------------------------------------------------------+------+-----------------+--------------+--------------+
++--------------------------------+
+| buildable_sets_report_template |
++--------------------------------+
+|                             12 |
++--------------------------------+
++-------------------------------------------+
+| feature                                   |
++-------------------------------------------+
+| Feature 4: production_user completed sets |
++-------------------------------------------+
++---------+------------------------------+---------------------+
+| set_num | name                         | completed_at        |
++---------+------------------------------+---------------------+
+| 75192-1 | Millennium Falcon            | 2026-10-20 10:00:00 |
+| 10316-1 | Lord of the Rings: Rivendell | 2026-10-15 10:00:00 |
++---------+------------------------------+---------------------+
++---------+------------------------------+---------------------+
+| set_num | name                         | completed_at        |
++---------+------------------------------+---------------------+
+| 10316-1 | Lord of the Rings: Rivendell | 2026-10-15 10:00:00 |
++---------+------------------------------+---------------------+
++------------------------------------------------+
+| feature                                        |
++------------------------------------------------+
+| Feature 5: parts related to 3001 (Brick 2 x 4) |
++------------------------------------------------+
++----------+--------+-------+
+| rel_type | role   | count |
++----------+--------+-------+
+| A        | parent |     8 |
+| M        | parent |     6 |
+| P        | parent |    86 |
++----------+--------+-------+
++----------+--------+------------+-------------------------------------------------------------+---------------+
+| rel_type | role   | part_num   | name                                                        | category_name |
++----------+--------+------------+-------------------------------------------------------------+---------------+
+| P        | parent | 3001pr0001 | Brick 2 x 4 with '100 LEGO Stores North America' Print      | Bricks        |
+| P        | parent | 3001pr0002 | Brick 2 x 4 with 'TOW MATER' on Sand Green Background Print | Bricks        |
+| P        | parent | 3001pr0003 | Brick 2 x 4 with White '1958' and '2018' Print              | Bricks        |
+| P        | parent | 3001pr0004 | Brick 2 x 4 with Three Black Squares Print                  | Bricks        |
+| P        | parent | 3001pr0006 | Brick 2 x 4 with Black Random Spots Print                   | Bricks        |
+| P        | parent | 3001pr0007 | Brick 2 x 4 with White Diagonal Stripes Print on Both Sides | Bricks        |
+| P        | parent | 3001pr0008 | Brick 2 x 4 with Red Diagonal Stripes Print                 | Bricks        |
+| P        | parent | 3001pr0009 | Brick 2 x 4 with Wavy Mouth and Eyes Print                  | Bricks        |
+| P        | parent | 3001pr0010 | Brick 2 x 4 with Eyes and Bushy Eyebrows Print              | Bricks        |
+| P        | parent | 3001pr0011 | Brick 2 x 4 with Snout, Fangs, and Whiskers Print           | Bricks        |
++----------+--------+------------+-------------------------------------------------------------+---------------+
