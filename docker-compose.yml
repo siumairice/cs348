@@ -33,7 +33,7 @@ services:
       DATA_DIR: /data
     volumes:
       - ./data:/data:ro
-    command: python db/import_sample.py
+    command: python db/import_data.py
     restart: "no"
   app:
     build: .

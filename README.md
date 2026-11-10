@@ -1,6 +1,6 @@
 # CS348 Project
 
-LEGO Sets Explorer: a Next.js frontend and FastAPI backend over MySQL, using Rebrickable set and theme data.
+LEGO Sets Explorer: a Next.js frontend and FastAPI backend over MySQL, using the full Rebrickable dataset (sets, themes, parts, colors, minifigs, and inventories).
 
 ## Organization
 
@@ -13,8 +13,8 @@ requirements.txt
 Dockerfile
 docker-compose.yml
 db/
-  schema.sql           themes and sets tables
-  import_sample.py     loads Rebrickable CSVs into MySQL
+  schema.sql           tables for every Rebrickable CSV
+  import_data.py       loads all Rebrickable CSVs into MySQL
   test-sample.sql      sample query
   test-sample.out      expected result
 src/
@@ -22,7 +22,7 @@ src/
 web/                   Next.js frontend (App Router, Tailwind)
   app/                 pages: overview, /sets, /sets/[setNum], /themes, /themes/[id]
   lib/api.ts           typed client for the FastAPI endpoints
-data/                  Rebrickable CSV downloads
+data/                  Rebrickable CSV downloads (inventory_parts.csv uses Git LFS)
 milestone-0/           contains changelog for each milestone
 milestone-1/
 milestone-2/
@@ -32,6 +32,7 @@ milestone-3/
 ## Prerequisites
 
 - Docker Desktop
+- Git LFS (`git lfs install && git lfs pull`), since `data/inventory_parts.csv` is stored with LFS
 
 ## How to Run the Application
 
@@ -43,7 +44,13 @@ From the project root:
 docker compose up --build
 ```
 
-MySQL is initialized from `db/schema.sql`. The importer loads Rebrickable themes and sets once the database is healthy. The API and the Next.js frontend then start.
+MySQL is initialized from `db/schema.sql`. Once the database is healthy, the importer loads every CSV in `data/` (about 2.1 million rows, roughly 30 seconds). The API and the Next.js frontend then start.
+
+On later starts the importer sees the data is already loaded and exits right away. To reload after changing the CSVs or the schema:
+
+```bash
+docker compose run --rm -e FORCE_IMPORT=1 importer
+```
 
 ### 2. Open the website
 
@@ -80,7 +87,7 @@ MySQL is available on host port **3307** (mapped from container 3306) so it does
 With the stack running:
 
 ```bash
-docker compose exec -T db mysql -uroot -pcs348pass --batch --raw lego_sets < db/test-sample.sql
+docker compose exec -T db mysql -uroot -pcs348pass --default-character-set=utf8mb4 --batch --raw lego_sets < db/test-sample.sql
 ```
 
 Compare the output to `db/test-sample.out`.
@@ -95,4 +102,4 @@ or Ctrl + C. Use `-v` only when you want to wipe the MySQL volume.
 
 ## Data attribution
 
-Set and theme data comes from [Rebrickable](https://rebrickable.com/downloads/).
+All LEGO data comes from [Rebrickable](https://rebrickable.com/downloads/).
