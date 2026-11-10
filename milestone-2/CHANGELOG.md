@@ -46,3 +46,39 @@ Implemented Feature 4 (R9): users can mark sets as completed and manage them on 
 - The demo completions now use fixed dates (two sets) instead of `CURRENT_TIMESTAMP`, so the output is the same on every run.
 - Query 4 shows the newest-first ordering. After the Feature 5 query (Query 5), the script runs the "Remove" `DELETE`, and Query 6 shows the remaining set.
 - Regenerated `test-sample.out` and removed a stray character from the old output.
+
+## Feature 3: What can I build?
+
+Users can record the parts they own and see which sets they can build with them.
+
+### API (`app.py`)
+- `GET /api/users/{id}/buildable` returns the sets a user can build: they own at least the required quantity of every non-spare part/colour in the set's latest inventory. It also returns the 12 sets the user is closest to finishing, with pieces owned, pieces required, and part/colour lots missing.
+- `GET`/`POST /api/users/{id}/parts` and `DELETE /api/users/{id}/parts/{part_num}/{color_id}` list, add, and remove owned parts. Adding a part the user already owns increases its quantity. Unknown parts or colours return 400.
+- `POST /api/users/{id}/parts/from-set/{set_num}` adds every non-spare part of a set, so a user can enter a set they own in one click.
+- `GET /api/colors` lists colours for the add-part form, leaving out `[Unknown]` and `[No Color/Any Color]`.
+- Writes use parameterized queries through the shared `run_write` helper from Feature 4.
+
+### Query and performance
+- The query starts from the user's parts instead of checking every set. It finds the inventories that share a part/colour with the collection, counts the lots the user fully covers, and compares that against each inventory's total lots. Sets with nothing in common with the collection, or with no non-spare parts, are never candidates, so an empty inventory is never reported as buildable.
+- Added `inventory_totals` (lots and pieces per inventory), rebuilt by the importer from `inventory_parts` after every run (about 1 second).
+- Widened `idx_inventory_parts_part_color` to (`part_num`, `color_id`, `is_spare`, `quantity`) so the part/colour lookup is answered from the index alone. This also helps feature 1.
+- With a 7,499-piece collection (the Millennium Falcon's parts) on the full dataset, the endpoint went from 4.2 s to 0.3 s. Both the large collection and a small one return exactly the same sets as the report's `NOT EXISTS` query.
+
+### Database
+- `db/schema.sql` creates the demo user `sample_user` (id 1), since there is no login yet.
+- On restart, the importer now also applies the schema and rebuilds `inventory_totals`, so existing volumes pick up new tables without a full reload.
+
+### Frontend (`web/`)
+- **My Parts** (`/my-parts`): add parts by number, colour, and quantity; see the collection with colour swatches; remove parts.
+- **What Can I Build** (`/build`): buildable sets as cards, then "Almost there" sets with a progress bar.
+- Set pages have an **I own this set** button that adds the set's parts.
+- Added both pages to the nav, which now wraps on narrow screens.
+- Writes go through Next.js Server Actions, so the browser still never calls the API directly.
+
+## README (C1)
+
+- Reorganized `README.md` around the C1 requirements, with separate sections on running the app, the sample database, and the production database.
+- Added a features table covering features 1 to 5: status, where each one is in the app, and which files implement it. Feature 1 is not implemented in the app yet.
+- Documented where the production data comes from, how to download it, what `db/import_data.py` checks and transforms, and the row count of every table.
+- Added `db/download_data.sh`, which downloads and unzips the latest 15 Rebrickable CSVs. A fresh export imports cleanly with foreign key checks on.
+

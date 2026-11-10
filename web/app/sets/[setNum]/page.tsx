@@ -6,6 +6,7 @@ import { getSet, NotFoundError } from "@/lib/api";
 import { SetGrid, Skeleton, StatTile } from "@/components/ui";
 import { SubmitButton } from "@/components/submit-button";
 import { markCompletedAction, removeCompletedAction } from "@/app/completed/actions";
+import { OwnSetButton } from "@/app/my-parts/forms";
 
 export default function SetPage(props: PageProps<"/sets/[setNum]">) {
   return (
@@ -75,6 +76,7 @@ async function SetDetail({ params }: { params: PageProps<"/sets/[setNum]">["para
               <SubmitButton>Mark as Completed</SubmitButton>
             </form>
           )}
+          <OwnSetButton setNum={set.set_num} />
           <a
             href={`https://rebrickable.com/sets/${set.set_num}/`}
             className="text-sm text-muted underline hover:text-foreground"

@@ -87,7 +87,9 @@ CREATE TABLE IF NOT EXISTS inventory_parts (
     is_spare BOOLEAN NOT NULL,
     img_url VARCHAR(512) NULL,
     PRIMARY KEY (inventory_id, part_num, color_id, is_spare),
-    KEY idx_inventory_parts_part_color (part_num, color_id),
+    -- Covering index for lookups by part/colour (features 1 and 3): InnoDB
+    -- appends the primary key, so it also carries inventory_id.
+    KEY idx_inventory_parts_part_color (part_num, color_id, is_spare, quantity),
     FOREIGN KEY (inventory_id) REFERENCES inventories(id),
     FOREIGN KEY (part_num) REFERENCES parts(part_num),
     FOREIGN KEY (color_id) REFERENCES colors(id)
@@ -109,6 +111,17 @@ CREATE TABLE IF NOT EXISTS inventory_minifigs (
     PRIMARY KEY (inventory_id, fig_num),
     FOREIGN KEY (inventory_id) REFERENCES inventories(id),
     FOREIGN KEY (fig_num) REFERENCES minifigs(fig_num)
+);
+
+-- Derived from inventory_parts by db/import_data.py after every import:
+-- the number of distinct non-spare part/colour lots and pieces per inventory.
+-- The "what can I build" query compares against these totals instead of
+-- re-counting up to 1.5M inventory_parts rows on every request.
+CREATE TABLE IF NOT EXISTS inventory_totals (
+    inventory_id INT PRIMARY KEY,
+    lots INT NOT NULL,
+    pieces INT NOT NULL,
+    FOREIGN KEY (inventory_id) REFERENCES inventories(id)
 );
 
 -- IDs used by other systems (BrickLink, BrickOwl, LDraw, ...).
@@ -168,3 +181,7 @@ CREATE TABLE IF NOT EXISTS user_completed_sets (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (set_num) REFERENCES sets(set_num) ON DELETE CASCADE
 );
+
+-- There is no login yet, so the website acts as this demo user.
+INSERT IGNORE INTO users (id, username, email)
+VALUES (1, 'sample_user', 'sample@example.com');

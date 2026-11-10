@@ -24,6 +24,8 @@ const NAV = [
   { href: "/themes", label: "Themes" },
   { href: "/parts", label: "Parts" },
   { href: "/completed", label: "My Completed Sets" },
+  { href: "/my-parts", label: "My Parts" },
+  { href: "/build", label: "What Can I Build" },
 ];
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -34,12 +36,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <header className="border-b border-border bg-surface">
-          <nav className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3">
+          <nav className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
             <Link href="/" className="flex items-center gap-2 font-semibold">
               <span className="inline-block h-5 w-5 rounded-sm bg-accent" />
               LEGO Sets Explorer
             </Link>
-            <div className="flex gap-4 text-sm text-muted">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted">
               {NAV.map((item) => (
                 <Link key={item.href} href={item.href} className="hover:text-foreground">
                   {item.label}

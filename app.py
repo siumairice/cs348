@@ -1,9 +1,10 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi import FastAPI, HTTPException, Query, Request, Response
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from mysql.connector import Error, IntegrityError, errorcode
+from pydantic import BaseModel, Field
 
 from database import connect_with_retry, get_connection
 
@@ -58,23 +59,6 @@ SORT_ORDERS = {
 }
 
 
-def run_query(sql, params=(), one=False):
-    connection = None
-    cursor = None
-    try:
-        connection = get_connection()
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute(sql, params)
-        return cursor.fetchone() if one else cursor.fetchall()
-    except Error as exc:
-        raise HTTPException(status_code=503, detail=str(exc)) from exc
-    finally:
-        if cursor is not None:
-            cursor.close()
-        if connection is not None and connection.is_connected():
-            connection.close()
-
-
 def run_write(sql, params=()):
     """Run one INSERT/UPDATE/DELETE, commit it, and return the affected row count."""
     connection = None
@@ -100,7 +84,23 @@ def run_write(sql, params=()):
             connection.close()
 
 
-@app.get("/", response_class=HTMLResponse)
+def run_query(sql, params=(), one=False):
+    connection = None
+    cursor = None
+    try:
+        connection = get_connection()
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute(sql, params)
+        return cursor.fetchone() if one else cursor.fetchall()
+    except Error as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if connection is not None and connection.is_connected():
+            connection.close()
+
+
 def home(request: Request):
     return templates.TemplateResponse(
         request=request,
@@ -503,3 +503,198 @@ def get_part(
         "counts": counts,
         "related": related,
     }
+
+
+# ---------------------------------------------------------------------------
+# Feature 3: a user's parts and the sets they can build with them.
+# There is no login yet, so the frontend acts as the demo user (id 1).
+# ---------------------------------------------------------------------------
+
+
+class OwnedPart(BaseModel):
+    part_num: str = Field(min_length=1, max_length=32)
+    color_id: int
+    quantity: int = Field(gt=0, le=100_000)
+
+
+def require_user(user_id: int):
+    user = run_query(
+        "SELECT id, username FROM users WHERE id = %s", (user_id,), one=True
+    )
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+
+@app.get("/api/colors")
+def list_colors():
+    colors = run_query(
+        """
+        SELECT id, name, rgb, is_trans
+        FROM colors
+        -- -1 is "[Unknown]" and 9999 is "[No Color/Any Color]"; nobody owns those.
+        WHERE id NOT IN (-1, 9999)
+        ORDER BY name
+        """
+    )
+    return {"colors": colors}
+
+
+@app.get("/api/users/{user_id}/parts")
+def list_user_parts(user_id: int):
+    user = require_user(user_id)
+    parts = run_query(
+        """
+        SELECT
+            up.part_num,
+            p.name AS part_name,
+            up.color_id,
+            c.name AS color_name,
+            c.rgb,
+            up.quantity
+        FROM user_parts up
+        JOIN parts p ON p.part_num = up.part_num
+        JOIN colors c ON c.id = up.color_id
+        WHERE up.user_id = %s
+        ORDER BY p.name, c.name
+        """,
+        (user_id,),
+    )
+    return {"user": user, "parts": parts}
+
+
+@app.post("/api/users/{user_id}/parts", status_code=204)
+def add_user_part(user_id: int, part: OwnedPart):
+    """Add pieces to the collection. Adding a part the user already owns increases its quantity."""
+    require_user(user_id)
+    try:
+        run_write(
+            """
+            INSERT INTO user_parts (user_id, part_num, color_id, quantity)
+            VALUES (%s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
+            """,
+            (user_id, part.part_num, part.color_id, part.quantity),
+        )
+    except HTTPException as exc:
+        if exc.status_code == 404:
+            raise HTTPException(status_code=400, detail="Unknown part or colour") from exc
+        raise
+    return Response(status_code=204)
+
+
+@app.delete("/api/users/{user_id}/parts/{part_num}/{color_id}", status_code=204)
+def remove_user_part(user_id: int, part_num: str, color_id: int):
+    require_user(user_id)
+    if run_write(
+        "DELETE FROM user_parts WHERE user_id = %s AND part_num = %s AND color_id = %s",
+        (user_id, part_num, color_id),
+    ) == 0:
+        raise HTTPException(status_code=404, detail="Part not in collection")
+    return Response(status_code=204)
+
+
+@app.post("/api/users/{user_id}/parts/from-set/{set_num}", status_code=204)
+def add_set_parts(user_id: int, set_num: str):
+    """Add every non-spare part of a set's latest inventory, e.g. for a set the user owns."""
+    require_user(user_id)
+    added = run_write(
+        """
+        INSERT INTO user_parts (user_id, part_num, color_id, quantity)
+        SELECT %s, ip.part_num, ip.color_id, ip.quantity
+        FROM inventories i
+        JOIN inventory_parts ip ON ip.inventory_id = i.id
+        WHERE i.set_num = %s
+          AND ip.is_spare = 0
+          AND i.version = (SELECT MAX(version) FROM inventories WHERE set_num = %s)
+        ON DUPLICATE KEY UPDATE quantity = user_parts.quantity + VALUES(quantity)
+        """,
+        (user_id, set_num, set_num),
+    )
+    if added == 0:
+        raise HTTPException(status_code=404, detail="Set not found or has no parts")
+    return Response(status_code=204)
+
+
+# Feature 3 query. A set is buildable when the user owns at least the required
+# quantity of every non-spare part/colour in the set's latest inventory.
+#
+# Rather than checking every set, start from the user's parts: `matched` uses
+# idx_inventory_parts_part_color to find each inventory that shares a
+# part/colour with the collection and counts the lots the user fully covers.
+# inventory_totals (precomputed at import) gives each inventory's total lots,
+# so a set is buildable when lots_covered = lots. Sets with no part in common
+# with the collection, or with no non-spare parts, never become candidates,
+# so an empty inventory is never reported as buildable.
+BUILDABLE_SQL = """
+    WITH matched AS (
+        SELECT
+            ip.inventory_id,
+            SUM(o.quantity >= ip.quantity) AS lots_covered,
+            SUM(LEAST(ip.quantity, o.quantity)) AS pieces_owned
+        FROM user_parts o
+        JOIN inventory_parts ip
+          ON ip.part_num = o.part_num
+         AND ip.color_id = o.color_id
+         AND ip.is_spare = 0
+        WHERE o.user_id = %s
+        GROUP BY ip.inventory_id
+    ),
+    coverage AS (
+        SELECT
+            m.inventory_id,
+            it.pieces AS pieces_required,
+            m.pieces_owned,
+            it.lots - m.lots_covered AS lots_missing
+        FROM matched m
+        JOIN inventory_totals it ON it.inventory_id = m.inventory_id
+    )
+    SELECT
+        s.set_num,
+        s.name,
+        s.year,
+        s.num_parts,
+        s.img_url,
+        t.name AS theme_name,
+        parent.name AS parent_theme_name,
+        CAST(cov.pieces_required AS SIGNED) AS pieces_required,
+        CAST(cov.pieces_owned AS SIGNED) AS pieces_owned,
+        CAST(cov.lots_missing AS SIGNED) AS lots_missing
+    FROM coverage cov
+    JOIN inventories i ON i.id = cov.inventory_id
+    JOIN sets s ON s.set_num = i.set_num
+    LEFT JOIN themes t ON t.id = s.theme_id
+    LEFT JOIN themes parent ON parent.id = t.parent_id
+    WHERE i.version = (SELECT MAX(i2.version) FROM inventories i2 WHERE i2.set_num = i.set_num)
+      AND {condition}
+    ORDER BY {order}
+    LIMIT %s
+"""
+
+
+@app.get("/api/users/{user_id}/buildable")
+def list_buildable_sets(
+    user_id: int,
+    limit: int = Query(default=48, ge=1, le=200),
+    almost_limit: int = Query(default=12, ge=0, le=100),
+):
+    user = require_user(user_id)
+    buildable = run_query(
+        BUILDABLE_SQL.format(
+            condition="cov.lots_missing = 0",
+            order="cov.pieces_required DESC, s.set_num",
+        ),
+        (user_id, limit + 1),
+    )
+    more = len(buildable) > limit
+    buildable = buildable[:limit]
+    almost = []
+    if almost_limit:
+        almost = run_query(
+            BUILDABLE_SQL.format(
+                condition="cov.lots_missing > 0",
+                order="cov.pieces_owned / cov.pieces_required DESC, cov.lots_missing, s.set_num",
+            ),
+            (user_id, almost_limit),
+        )
+    return {"user": user, "buildable": buildable, "more": more, "almost": almost}

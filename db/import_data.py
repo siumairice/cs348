@@ -7,6 +7,7 @@ The import is skipped when every table already has the same row count as its
 CSV, so restarting Compose is fast and switching DATA_DIR reloads. Set
 FORCE_IMPORT=1 to drop the catalogue tables and load them again anyway.
 The users, user_parts, and user_completed_sets tables are never dropped.
+inventory_totals is rebuilt from inventory_parts on every run.
 """
 
 import csv
@@ -177,16 +178,43 @@ def already_loaded(cursor):
     return True
 
 
-def load_schema(cursor):
-    cursor.execute("SET FOREIGN_KEY_CHECKS = 0")
-    for table, _, _ in reversed(TABLES):
-        cursor.execute(f"DROP TABLE IF EXISTS {table}")
-    cursor.execute("SET FOREIGN_KEY_CHECKS = 1")
+# Tables computed from the CSV tables rather than loaded from a CSV.
+DERIVED_TABLES = ["inventory_totals"]
+
+
+def run_schema(cursor):
+    """Run db/schema.sql. Every statement is idempotent (IF NOT EXISTS / INSERT IGNORE)."""
     schema = re.sub(r"--[^\n]*", "", SCHEMA_PATH.read_text())
     for statement in schema.split(";"):
         sql = statement.strip()
         if sql:
             cursor.execute(sql)
+
+
+def load_schema(cursor):
+    cursor.execute("SET FOREIGN_KEY_CHECKS = 0")
+    for table in DERIVED_TABLES + [table for table, _, _ in reversed(TABLES)]:
+        cursor.execute(f"DROP TABLE IF EXISTS {table}")
+    cursor.execute("SET FOREIGN_KEY_CHECKS = 1")
+    run_schema(cursor)
+
+
+def build_inventory_totals(cursor):
+    started = time.monotonic()
+    cursor.execute("DELETE FROM inventory_totals")
+    cursor.execute(
+        """
+        INSERT INTO inventory_totals (inventory_id, lots, pieces)
+        SELECT inventory_id, COUNT(*), SUM(quantity)
+        FROM inventory_parts
+        WHERE is_spare = 0
+        GROUP BY inventory_id
+        """
+    )
+    print(
+        f"Built {cursor.rowcount:>9,} rows in inventory_totals "
+        f"({time.monotonic() - started:.1f}s)"
+    )
 
 
 def read_rows(path, columns):
@@ -224,6 +252,11 @@ def main():
         cursor = connection.cursor()
 
         if not FORCE_IMPORT and already_loaded(cursor):
+            # Older volumes may predate newer tables, so apply the schema and
+            # rebuild the derived totals anyway. Both are cheap.
+            run_schema(cursor)
+            build_inventory_totals(cursor)
+            connection.commit()
             print(f"Data from {DATA_DIR} already loaded. Set FORCE_IMPORT=1 to reload.")
             return
 
@@ -236,6 +269,7 @@ def main():
             import_table(cursor, table, filename, columns)
             if self_referencing:
                 cursor.execute("SET FOREIGN_KEY_CHECKS = 1")
+        build_inventory_totals(cursor)
         connection.commit()
         print(f"Rebrickable data import from {DATA_DIR} complete.")
     except Error as exc:

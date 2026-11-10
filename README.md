@@ -1,43 +1,39 @@
 # CS348 Project
 
-LEGO Sets Explorer: a Next.js frontend and FastAPI backend over MySQL, using the full Rebrickable dataset (sets, themes, parts, colors, minifigs, and inventories).
+LEGO Sets Explorer: a Next.js frontend and FastAPI backend over MySQL, built on the [Rebrickable](https://rebrickable.com/downloads/) LEGO dataset (sets, themes, parts, colours, minifigs, and inventories). Users can browse sets, look up parts, record the pieces they own, see which sets they can build, and track the sets they have completed.
 
-## Organization
+## Contents
 
-The application lives in the project root. Milestone folders contain changelogs for that milestone.
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Run the application](#run-the-application)
+- [Sample database](#sample-database)
+- [Production database](#production-database)
+- [API endpoints](#api-endpoints)
+- [Project layout](#project-layout)
 
-```text
-app.py                 FastAPI routes and HTML page
-database.py            MySQL connection and retry logic
-requirements.txt
-Dockerfile
-docker-compose.yml
-db/
-  schema.sql           Rebrickable tables plus users, user_parts, user_completed_sets
-  import_data.py       loads the Rebrickable CSVs (full or subset) into MySQL
-  test-sample.sql      sample query
-  test-sample.out      expected result
-src/
-  index.html           plain HTML test page served by FastAPI at /
-web/                   Next.js frontend (App Router, Tailwind)
-  app/                 pages: overview, /sets, /sets/[setNum], /themes, /themes/[id], /parts, /parts/[partNum], /completed
-  lib/api.ts           typed client for the FastAPI endpoints
-data/                  full Rebrickable CSV downloads (inventory_parts.csv uses Git LFS)
-  subset/              small foreign-key-valid sample (Indiana Jones sets)
-milestone-0/           contains changelog for each milestone
-milestone-1/
-milestone-2/
-milestone-3/
-```
+## Features
+
+Feature numbers match the report (R6 to R10). Four of the five are implemented.
+
+| # | Feature | Status | Where in the app | Implementation |
+| --- | --- | --- | --- | --- |
+| 1 (R6) | Find sets that contain a given part in a given colour | Not implemented yet. The query is in `db/test-sample.sql` (Query 1) | | |
+| 2 (R7) | Search sets by theme and piece count | Implemented | **Sets** (`/sets`): theme drop-down, min/max pieces, year range, name search, sorting, pagination | `list_sets` in `app.py`; `web/app/sets/page.tsx` |
+| 3 (R8) | Find sets the user can build with their pieces | Implemented | **My Parts** (`/my-parts`) to enter pieces, or **I own this set** on a set page; **What Can I Build** (`/build`) for buildable and nearly buildable sets | `list_user_parts`, `add_user_part`, `remove_user_part`, `add_set_parts`, `list_buildable_sets`, and `BUILDABLE_SQL` in `app.py`; `inventory_totals` in `db/schema.sql`; `web/app/my-parts/`, `web/app/build/page.tsx` |
+| 4 (R9) | Mark sets as completed and list them | Implemented | **Mark as Completed** / **Remove** on a set page; **My Completed Sets** (`/completed`) | `list_completed`, `mark_completed`, `remove_completed` in `app.py`; `web/app/completed/` |
+| 5 (R10) | Find related parts (prints, patterns, alternate moulds, alternates, sub-parts, pairs) | Implemented | **Parts** (`/parts`) to search, then a part's page (`/parts/[partNum]`) | `list_parts`, `get_part` in `app.py`; `web/app/parts/` |
+
+The app also has an overview page with catalogue statistics (`/`), set detail pages (`/sets/[setNum]`), and theme pages (`/themes`, `/themes/[id]`).
+
+There is no login yet. The website acts as a single demo user, `sample_user` (id 1), which `db/schema.sql` creates and the API also makes sure exists on startup.
 
 ## Prerequisites
 
 - Docker Desktop
-- Git LFS (`git lfs install && git lfs pull`), since `data/inventory_parts.csv` is stored with LFS. Not needed for the `data/subset/` sample.
+- Git LFS (`git lfs install && git lfs pull`), because `data/inventory_parts.csv` is stored with LFS. It is not needed for the sample database, or if you download the production data yourself (see [Production database](#production-database)).
 
-## How to Run the Application
-
-### 1. Start the containers
+## Run the application
 
 From the project root:
 
@@ -45,29 +41,117 @@ From the project root:
 docker compose up --build
 ```
 
-MySQL is initialized from `db/schema.sql`. Once the database is healthy, the importer loads every CSV in `data/` (the full dataset, about 2.1 million rows, roughly 30 seconds). The API and the Next.js frontend then start.
+This starts four containers:
 
-On later starts the importer sees the data is already loaded and exits right away. To reload anyway, for example after changing the schema:
+1. `db`: MySQL 8.0. On a new volume it runs `db/schema.sql`, which creates the tables and the demo user.
+2. `importer`: runs `db/import_data.py` once the database is healthy, loading the production dataset from `data/` (see below), then exits.
+3. `app`: the FastAPI backend, started after the importer finishes.
+4. `web`: the Next.js frontend.
+
+Then open:
+
+- Frontend: http://localhost:3000
+- API docs (interactive): http://localhost:8000/docs
+- Plain HTML test page: http://localhost:8000
+
+MySQL is also reachable from the host on port **3307** (mapped from 3306 in the container), so it does not conflict with a local MySQL install.
+
+To stop the app, press Ctrl + C or run `docker compose down`. Add `-v` to also delete the MySQL volume, so the next start rebuilds the database from scratch.
+
+### Frontend development
+
+To work on the frontend with hot reload, keep the `db` and `app` containers running and start Next.js locally (Node 20+):
 
 ```bash
-docker compose run --rm -e FORCE_IMPORT=1 importer
+cd web
+npm install
+npm run dev
 ```
 
-To load the small Indiana Jones sample in `data/subset/` instead (no Git LFS needed), point `DATA_DIR` at it. Run the same command without the override to switch back to the full dataset:
+It reads `API_URL` (default `http://localhost:8000`). Pages fetch from FastAPI on the server, and writes go through Next.js Server Actions, so the browser never calls the API directly.
+
+## Sample database
+
+The sample database is a small, hand-picked, foreign-key-valid subset of Rebrickable in `data/subset/`: two Indiana Jones sets, with exactly the themes, parts, colours, minifigs, and inventory rows they need (one to four rows per table). It is small enough to check query results by hand.
+
+**Create and load it.** With the stack running (`docker compose up --build`), load the subset in place of the full data:
 
 ```bash
 docker compose run --rm -e DATA_DIR=/data/subset importer
 ```
 
-The `lego_sets` database also contains `users`, `user_parts`, and `user_completed_sets`. The importer never drops these. The sample SQL script seeds a demo user and example user data before running its user-related queries.
+The tables come from `db/schema.sql`, which is the same for both datasets. The importer replaces the Rebrickable tables but keeps the `users`, `user_parts`, and `user_completed_sets` tables.
 
-### 2. Open the website
+**Run the sample queries.** `db/test-sample.sql` seeds example user data, then runs the query for each feature:
 
-- Frontend: http://localhost:3000
-- API docs: http://localhost:8000/docs
-- Plain test page: http://localhost:8000
+```bash
+docker compose exec -T db mysql -uroot -pcs348pass --default-character-set=utf8mb4 --batch --raw lego_sets < db/test-sample.sql
+```
 
-API endpoints:
+Compare the output with `db/test-sample.out`. `--default-character-set=utf8mb4` makes names with curly quotes, such as "Olivia Rodrigo’s Dual Guitar", print correctly.
+
+**Switch back to the production data.** Running the importer without the override reloads `data/`:
+
+```bash
+docker compose run --rm importer
+```
+
+## Production database
+
+The production database is the complete Rebrickable export: 15 CSV files and about 2.1 million rows.
+
+### Where the data comes from
+
+Rebrickable publishes the files at https://rebrickable.com/downloads/ (direct links: `https://cdn.rebrickable.com/media/downloads/<table>.csv.gz`) and regenerates them daily. The repo includes a snapshot in `data/`, with the 134 MB `inventory_parts.csv` stored through Git LFS.
+
+### How to generate it
+
+To download the latest export instead of using the snapshot:
+
+```bash
+db/download_data.sh          # downloads and unzips all 15 files into data/
+```
+
+`db/download_data.sh [destination]` can also write somewhere else. The newest export has slightly more rows than the snapshot. The table below shows the snapshot's counts.
+
+### How to load it
+
+`docker compose up --build` loads `data/` automatically. To force a reload, for example after downloading new files or changing the schema:
+
+```bash
+docker compose run --rm -e FORCE_IMPORT=1 importer
+```
+
+`db/import_data.py` does the extract, transform, and load:
+
+- **Checks** that all 15 files exist, that each header has the expected columns, and that no file is still a Git LFS pointer. It stops with a clear message otherwise.
+- **Transforms** each row: `True`/`False` become booleans, empty cells become `NULL`, numeric columns become integers, and `color_mappings.csv`'s `id` column is renamed to `color_id`.
+- **Loads** tables parent-first, streaming each CSV in batches of 5,000 rows, with foreign key checks on. The only exception is `themes`, which references itself. The inserts run in one transaction, and the whole load takes about 30 seconds.
+- **Derives** `inventory_totals` (part/colour lots and pieces per inventory) from `inventory_parts`. Feature 3 uses it.
+- **Skips** the import on later starts when every table already has the same row count as its CSV, so restarts are quick. Switching `DATA_DIR` or downloading a newer export changes the counts and triggers a reload. Use `FORCE_IMPORT=1` to reload anyway.
+
+| Table | Rows (snapshot) |
+| --- | ---: |
+| `inventory_parts` | 1,567,464 |
+| `part_mappings` | 183,131 |
+| `elements` | 114,671 |
+| `set_mappings` | 71,742 |
+| `parts` | 64,906 |
+| `inventories` | 47,793 |
+| `inventory_totals` (derived) | 39,117 |
+| `part_relationships` | 37,543 |
+| `sets` | 28,547 |
+| `inventory_minifigs` | 25,906 |
+| `minifigs` | 17,293 |
+| `inventory_sets` | 5,217 |
+| `color_mappings` | 846 |
+| `themes` | 496 |
+| `colors` | 275 |
+| `part_categories` | 76 |
+
+One mismatch in the data: about 17,000 rows in `inventories` (and some in `set_mappings`) belong to minifigs (`fig-...`) rather than sets. Their `set_num` column therefore has no foreign key to `sets`. Feature queries join `inventories` to `sets`, which leaves the minifig rows out.
+
+## API endpoints
 
 | Endpoint | Description |
 | --- | --- |
@@ -81,40 +165,37 @@ API endpoints:
 | `GET /api/completed` | The demo user's completed sets, newest first |
 | `POST /api/completed/{set_num}` | Mark a set as completed today (409 if already completed, 404 if no such set) |
 | `DELETE /api/completed/{set_num}` | Remove a completed set. Returns `{"removed": true\|false}` |
+| `GET /api/colors` | All colours a user can own, for the My Parts form |
+| `GET /api/users/{id}/parts` | A user's parts with part name, colour name, and quantity |
+| `POST /api/users/{id}/parts` | Add pieces. JSON body `{part_num, color_id, quantity}`. Adding a part the user already owns increases its quantity. 400 for an unknown part or colour |
+| `DELETE /api/users/{id}/parts/{part_num}/{color_id}` | Remove one part/colour from the collection |
+| `POST /api/users/{id}/parts/from-set/{set_num}` | Add every non-spare part of a set's latest inventory (for a set the user owns) |
+| `GET /api/users/{id}/buildable` | Feature 3: sets the user can build with their parts, plus the closest sets they can't build yet. Params: `limit` (default 48, max 200), `almost_limit` (default 12) |
 
-There is no login yet: the API creates and uses a single demo user (`sample_user`) for completed sets.
+## Project layout
 
-### Frontend development
-
-To work on the frontend with hot reload, keep the `db` and `app` containers running and start Next.js locally (Node 20+):
-
-```bash
-cd web
-npm install
-npm run dev
+```text
+app.py                 FastAPI routes (all features)
+database.py            MySQL connection and retry logic
+requirements.txt       Python dependencies
+Dockerfile             backend and importer image
+docker-compose.yml     db, importer, app, web services
+db/
+  schema.sql           tables, keys, indexes, demo user (shared by sample and production)
+  import_data.py       validates, transforms, and loads the CSVs; builds inventory_totals
+  download_data.sh     downloads the latest production CSVs from Rebrickable
+  test-sample.sql      one query per feature, for the sample database
+  test-sample.out      expected output of test-sample.sql on the sample database
+src/
+  index.html           plain HTML test page served by FastAPI at /
+web/                   Next.js frontend (App Router, TypeScript, Tailwind)
+  app/                 pages: /, /sets, /sets/[setNum], /themes, /themes/[id], /parts,
+                       /parts/[partNum], /my-parts, /build, /completed
+  lib/api.ts           typed client for the FastAPI endpoints
+data/                  production dataset snapshot (inventory_parts.csv uses Git LFS)
+  subset/              sample dataset
+milestone-0/ ... milestone-3/   changelog for each milestone
 ```
-
-It reads `API_URL` (default `http://localhost:8000`). Pages fetch from FastAPI on the server, so the browser never calls the API directly.
-
-MySQL is available on host port **3307** (mapped from container 3306) so it does not conflict with a local MySQL install.
-
-### 3. Run the sample SQL queries
-
-With the stack running:
-
-```bash
-docker compose exec -T db mysql -uroot -pcs348pass --default-character-set=utf8mb4 --batch --raw lego_sets < db/test-sample.sql
-```
-
-The queries match the small Indiana Jones dataset in `data/subset/`, so load it first (`docker compose run --rm -e DATA_DIR=/data/subset importer`). Compare the output to `db/test-sample.out`.
-
-### 4. Stop the app
-
-```bash
-docker compose down -v
-```
-
-or Ctrl + C. Use `-v` only when you want to wipe the MySQL volume.
 
 ## Data attribution
 

@@ -156,3 +156,67 @@ export const searchParts = (q?: string) =>
 
 export const getPart = (partNum: string, params?: { limit?: string; offset?: string }) =>
   get<PartDetail>(`/api/parts/${encodeURIComponent(partNum)}`, params);
+
+// Feature 3: a user's parts and the sets they can build.
+// There is no login yet, so every page acts as the demo user seeded by db/schema.sql.
+export const DEMO_USER_ID = 1;
+
+export type Color = { id: number; name: string; rgb: string; is_trans: number };
+
+export type OwnedPart = {
+  part_num: string;
+  part_name: string;
+  color_id: number;
+  color_name: string;
+  rgb: string;
+  quantity: number;
+};
+
+export type User = { id: number; username: string };
+
+export type BuildableSet = SetSummary & {
+  pieces_required: number;
+  pieces_owned: number;
+  // Distinct part/colour lots the user has too few of (0 = buildable).
+  lots_missing: number;
+};
+
+export const listColors = () => get<{ colors: Color[] }>("/api/colors");
+
+export const getUserParts = (userId = DEMO_USER_ID) =>
+  get<{ user: User; parts: OwnedPart[] }>(`/api/users/${userId}/parts`);
+
+export const getBuildable = (userId = DEMO_USER_ID) =>
+  get<{
+    user: User;
+    buildable: BuildableSet[];
+    // True when there are more buildable sets than were returned.
+    more: boolean;
+    almost: BuildableSet[];
+  }>(
+    `/api/users/${userId}/buildable`,
+  );
+
+// Writes go through Server Actions, which call this. Returns the API's error
+// message instead of throwing, so forms can show it.
+export async function sendForm(
+  method: "POST" | "DELETE",
+  path: string,
+  body?: unknown,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const response = await fetch(new URL(path, API_URL), {
+    method,
+    headers: body ? { "content-type": "application/json" } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (response.ok) return { ok: true };
+  const data = await response.json().catch(() => null);
+  const detail = data?.detail;
+  const error =
+    typeof detail === "string"
+      ? detail
+      : Array.isArray(detail)
+        ? detail.map((d: { msg?: string }) => d.msg).join(", ")
+        : `Request failed with ${response.status}`;
+  return { ok: false, error };
+}
