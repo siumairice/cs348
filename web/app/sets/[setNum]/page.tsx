@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { getSet, NotFoundError } from "@/lib/api";
 import { SetGrid, Skeleton, StatTile } from "@/components/ui";
+import { SubmitButton } from "@/components/submit-button";
+import { markCompletedAction, removeCompletedAction } from "@/app/completed/actions";
 
 export default function SetPage(props: PageProps<"/sets/[setNum]">) {
   return (
@@ -58,6 +60,21 @@ async function SetDetail({ params }: { params: PageProps<"/sets/[setNum]">["para
             <StatTile label="Year" value={String(set.year)} />
             <StatTile label="Pieces" value={set.num_parts} />
           </div>
+          {set.completed_at ? (
+            <form
+              action={removeCompletedAction.bind(null, set.set_num)}
+              className="flex items-center gap-3"
+            >
+              <span className="text-sm">
+                Completed on <span className="tabular-nums">{set.completed_at.slice(0, 10)}</span>
+              </span>
+              <SubmitButton pendingText="Removing…">Remove</SubmitButton>
+            </form>
+          ) : (
+            <form action={markCompletedAction.bind(null, set.set_num)}>
+              <SubmitButton>Mark as Completed</SubmitButton>
+            </form>
+          )}
           <a
             href={`https://rebrickable.com/sets/${set.set_num}/`}
             className="text-sm text-muted underline hover:text-foreground"

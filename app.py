@@ -3,14 +3,43 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from mysql.connector import Error
+from mysql.connector import Error, IntegrityError, errorcode
 
 from database import connect_with_retry, get_connection
 
+# There is no login yet, so every request acts as this demo user.
+# It is the same user that db/test-sample.sql seeds.
+DEMO_USERNAME = "sample_user"
+DEMO_EMAIL = "sample@example.com"
+DEMO_USER_ID = None
+
+
+def ensure_demo_user(connection):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(
+            """
+            INSERT INTO users (username, email)
+            VALUES (%s, %s)
+            ON DUPLICATE KEY UPDATE email = VALUES(email)
+            """,
+            (DEMO_USERNAME, DEMO_EMAIL),
+        )
+        connection.commit()
+        cursor.execute("SELECT id FROM users WHERE username = %s", (DEMO_USERNAME,))
+        return cursor.fetchone()[0]
+    finally:
+        cursor.close()
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    global DEMO_USER_ID
     connection = connect_with_retry()
-    connection.close()
+    try:
+        DEMO_USER_ID = ensure_demo_user(connection)
+    finally:
+        connection.close()
     yield
 
 
@@ -37,6 +66,31 @@ def run_query(sql, params=(), one=False):
         cursor = connection.cursor(dictionary=True)
         cursor.execute(sql, params)
         return cursor.fetchone() if one else cursor.fetchall()
+    except Error as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if connection is not None and connection.is_connected():
+            connection.close()
+
+
+def run_write(sql, params=()):
+    """Run one INSERT/UPDATE/DELETE, commit it, and return the affected row count."""
+    connection = None
+    cursor = None
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute(sql, params)
+        connection.commit()
+        return cursor.rowcount
+    except IntegrityError as exc:
+        if exc.errno == errorcode.ER_DUP_ENTRY:
+            raise HTTPException(status_code=409, detail="Already exists") from exc
+        if exc.errno == errorcode.ER_NO_REFERENCED_ROW_2:
+            raise HTTPException(status_code=404, detail="Referenced row not found") from exc
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
     except Error as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
     finally:
@@ -159,7 +213,73 @@ def get_set(set_num: str):
         """,
         (row["theme_id"], set_num, row["year"]),
     )
+    completed = run_query(
+        """
+        SELECT completed_at
+        FROM user_completed_sets
+        WHERE user_id = %s AND set_num = %s
+        """,
+        (DEMO_USER_ID, set_num),
+        one=True,
+    )
+    row["completed_at"] = completed["completed_at"] if completed else None
     return {"set": row, "related": related}
+
+
+@app.get("/api/completed")
+def list_completed():
+    sets = run_query(
+        """
+        SELECT
+            s.set_num,
+            s.name,
+            ucs.completed_at
+        FROM
+            user_completed_sets AS ucs
+            JOIN sets AS s ON s.set_num = ucs.set_num
+        WHERE
+            ucs.user_id = %s
+        ORDER BY
+            ucs.completed_at DESC
+        """,
+        (DEMO_USER_ID,),
+    )
+    return {"sets": sets}
+
+
+@app.post("/api/completed/{set_num}", status_code=201)
+def mark_completed(set_num: str):
+    # completed_at defaults to CURRENT_TIMESTAMP. The (user_id, set_num) primary key
+    # rejects a second insert, which run_write turns into a 409. The original date stays.
+    try:
+        run_write(
+            "INSERT INTO user_completed_sets (user_id, set_num) VALUES (%s, %s)",
+            (DEMO_USER_ID, set_num),
+        )
+    except HTTPException as exc:
+        if exc.status_code == 409:
+            raise HTTPException(status_code=409, detail="Set already completed") from exc
+        if exc.status_code == 404:
+            raise HTTPException(status_code=404, detail="Set not found") from exc
+        raise
+    return run_query(
+        """
+        SELECT set_num, completed_at
+        FROM user_completed_sets
+        WHERE user_id = %s AND set_num = %s
+        """,
+        (DEMO_USER_ID, set_num),
+        one=True,
+    )
+
+
+@app.delete("/api/completed/{set_num}")
+def remove_completed(set_num: str):
+    removed = run_write(
+        "DELETE FROM user_completed_sets WHERE user_id = %s AND set_num = %s",
+        (DEMO_USER_ID, set_num),
+    )
+    return {"removed": removed > 0}
 
 
 @app.get("/api/themes")

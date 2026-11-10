@@ -16,6 +16,13 @@ export type SetSummary = {
 
 export type SetDetail = SetSummary & {
   parent_theme_id: number | null;
+  completed_at: string | null;
+};
+
+export type CompletedSet = {
+  set_num: string;
+  name: string;
+  completed_at: string;
 };
 
 export type Theme = {
@@ -92,3 +99,20 @@ export const getTheme = (id: string) =>
   get<ThemeDetail>(`/api/themes/${encodeURIComponent(id)}`);
 
 export const getStats = () => get<Stats>("/api/stats");
+
+export const listCompleted = () => get<{ sets: CompletedSet[] }>("/api/completed");
+
+async function send(method: "POST" | "DELETE", path: string, okStatuses: number[] = []) {
+  const url = new URL(path, API_URL);
+  const response = await fetch(url, { method });
+  if (!response.ok && !okStatuses.includes(response.status)) {
+    throw new Error(`API ${method} ${url.pathname} failed with ${response.status}`);
+  }
+}
+
+// 409 means the set is already completed (double click or stale page), so it counts as success.
+export const markCompleted = (setNum: string) =>
+  send("POST", `/api/completed/${encodeURIComponent(setNum)}`, [409]);
+
+export const removeCompleted = (setNum: string) =>
+  send("DELETE", `/api/completed/${encodeURIComponent(setNum)}`);

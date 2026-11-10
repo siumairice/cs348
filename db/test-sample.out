@@ -13,4 +13,9 @@ COMCON002-1     Indiana Jones Brickmaster Pack  0
 
 Query 4
 set_num         name                            completed_at
-COMCON002-1     Indiana Jones Brickmaster Pack  2026-10-24 00:26:11? 
+20004-1         Jungle Cruiser                  2026-10-20 10:00:00
+COMCON002-1     Indiana Jones Brickmaster Pack  2026-10-15 10:00:00
+
+Query 5
+set_num         name                            completed_at
+COMCON002-1     Indiana Jones Brickmaster Pack  2026-10-15 10:00:00

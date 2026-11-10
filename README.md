@@ -20,7 +20,7 @@ db/
 src/
   index.html           plain HTML test page served by FastAPI at /
 web/                   Next.js frontend (App Router, Tailwind)
-  app/                 pages: overview, /sets, /sets/[setNum], /themes, /themes/[id]
+  app/                 pages: overview, /sets, /sets/[setNum], /themes, /themes/[id], /completed
   lib/api.ts           typed client for the FastAPI endpoints
 data/                  Rebrickable CSV downloads
 milestone-0/           contains changelog for each milestone
@@ -64,6 +64,11 @@ API endpoints:
 | `GET /api/themes` | All themes with set counts and year range. Param: `q` |
 | `GET /api/themes/{id}` | Theme stats, subthemes, and sets per year |
 | `GET /api/stats` | Catalogue totals, sets per year, top themes, biggest sets |
+| `GET /api/completed` | The demo user's completed sets, newest first |
+| `POST /api/completed/{set_num}` | Mark a set as completed today (409 if already completed, 404 if no such set) |
+| `DELETE /api/completed/{set_num}` | Remove a completed set. Returns `{"removed": true\|false}` |
+
+There is no login yet: the API creates and uses a single demo user (`sample_user`) for completed sets.
 
 ### Frontend development
 

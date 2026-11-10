@@ -8,8 +8,15 @@ FROM users
 WHERE username = 'sample_user'
 ON DUPLICATE KEY UPDATE quantity = VALUES(quantity);
 
+-- Fixed dates keep the output stable across runs.
 INSERT INTO user_completed_sets (user_id, set_num, completed_at)
-SELECT id, 'COMCON002-1', CURRENT_TIMESTAMP
+SELECT id, 'COMCON002-1', '2026-10-15 10:00:00'
+FROM users
+WHERE username = 'sample_user'
+ON DUPLICATE KEY UPDATE completed_at = VALUES(completed_at);
+
+INSERT INTO user_completed_sets (user_id, set_num, completed_at)
+SELECT id, '20004-1', '2026-10-20 10:00:00'
 FROM users
 WHERE username = 'sample_user'
 ON DUPLICATE KEY UPDATE completed_at = VALUES(completed_at);
@@ -94,6 +101,35 @@ ORDER BY
     s.set_num;
 
 -- Fetch the sample user's completed sets.
+SELECT
+    s.set_num,
+    s.name,
+    ucs.completed_at
+FROM
+    user_completed_sets AS ucs
+    JOIN sets AS s ON s.set_num = ucs.set_num
+WHERE
+    ucs.user_id = (
+        SELECT id
+        FROM users
+        WHERE username = 'sample_user'
+    )
+ORDER BY
+    ucs.completed_at DESC;
+
+-- "Remove" button: the app runs
+--   DELETE FROM user_completed_sets WHERE user_id = %s AND set_num = %s
+-- with the demo user's id and the set number as parameters.
+DELETE FROM user_completed_sets
+WHERE
+    user_id = (
+        SELECT id
+        FROM users
+        WHERE username = 'sample_user'
+    )
+    AND set_num = '20004-1';
+
+-- Fetch the completed sets again: only COMCON002-1 is left.
 SELECT
     s.set_num,
     s.name,
