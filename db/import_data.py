@@ -1,8 +1,12 @@
 """Load the full Rebrickable dataset from data/*.csv into MySQL.
 
-Every CSV in data/ maps to one table in db/schema.sql. The import is skipped
-when the tables already hold data, so restarting Compose is fast. Set
-FORCE_IMPORT=1 to drop the catalogue tables and load them again.
+Every CSV maps to one table in db/schema.sql. DATA_DIR picks the dataset:
+data/ for the full download, or data/subset/ for the small sample.
+
+The import is skipped when every table already has the same row count as its
+CSV, so restarting Compose is fast and switching DATA_DIR reloads. Set
+FORCE_IMPORT=1 to drop the catalogue tables and load them again anyway.
+The users, user_parts, and user_completed_sets tables are never dropped.
 """
 
 import csv
@@ -140,17 +144,26 @@ def check_data_files():
     missing = [name for _, name, _ in TABLES if not (DATA_DIR / name).is_file()]
     if missing:
         raise SystemExit(f"Missing data files in {DATA_DIR}: {', '.join(missing)}")
-    # inventory_parts.csv is stored with Git LFS. Without `git lfs pull` the
-    # checkout holds a small pointer file instead of the CSV.
-    with (DATA_DIR / "inventory_parts.csv").open(encoding="utf-8") as handle:
-        if handle.readline().startswith("version https://git-lfs"):
-            raise SystemExit(
-                "data/inventory_parts.csv is a Git LFS pointer. Run `git lfs pull` first."
-            )
+    for _, filename, columns in TABLES:
+        path = DATA_DIR / filename
+        with path.open(newline="", encoding="utf-8") as handle:
+            header = next(csv.reader(handle), [])
+        # inventory_parts.csv is stored with Git LFS. Without `git lfs pull`
+        # the checkout holds a small pointer file instead of the CSV.
+        if header and header[0].startswith("version https://git-lfs"):
+            raise SystemExit(f"{path} is a Git LFS pointer. Run `git lfs pull` first.")
+        expected = [field for _, field, _ in columns]
+        if header != expected:
+            raise SystemExit(f"Unexpected columns in {path}: {header}; expected {expected}")
+
+
+def csv_row_count(path):
+    with path.open(newline="", encoding="utf-8") as handle:
+        return sum(1 for _ in csv.reader(handle)) - 1
 
 
 def already_loaded(cursor):
-    for table, _, _ in TABLES:
+    for table, filename, _ in TABLES:
         cursor.execute(
             "SELECT COUNT(*) FROM information_schema.tables "
             "WHERE table_schema = DATABASE() AND table_name = %s",
@@ -158,8 +171,8 @@ def already_loaded(cursor):
         )
         if cursor.fetchone()[0] == 0:
             return False
-        cursor.execute(f"SELECT EXISTS (SELECT 1 FROM {table})")
-        if not cursor.fetchone()[0]:
+        cursor.execute(f"SELECT COUNT(*) FROM {table}")
+        if cursor.fetchone()[0] != csv_row_count(DATA_DIR / filename):
             return False
     return True
 
@@ -211,7 +224,7 @@ def main():
         cursor = connection.cursor()
 
         if not FORCE_IMPORT and already_loaded(cursor):
-            print("Rebrickable data already loaded. Set FORCE_IMPORT=1 to reload.")
+            print(f"Data from {DATA_DIR} already loaded. Set FORCE_IMPORT=1 to reload.")
             return
 
         load_schema(cursor)
@@ -224,7 +237,7 @@ def main():
             if self_referencing:
                 cursor.execute("SET FOREIGN_KEY_CHECKS = 1")
         connection.commit()
-        print("Rebrickable data import complete.")
+        print(f"Rebrickable data import from {DATA_DIR} complete.")
     except Error as exc:
         print(f"Database Error: {exc}")
         sys.exit(1)

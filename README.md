@@ -13,8 +13,8 @@ requirements.txt
 Dockerfile
 docker-compose.yml
 db/
-  schema.sql           tables for every Rebrickable CSV
-  import_data.py       loads all Rebrickable CSVs into MySQL
+  schema.sql           Rebrickable tables plus users, user_parts, user_completed_sets
+  import_data.py       loads the Rebrickable CSVs (full or subset) into MySQL
   test-sample.sql      sample query
   test-sample.out      expected result
 src/
@@ -22,7 +22,8 @@ src/
 web/                   Next.js frontend (App Router, Tailwind)
   app/                 pages: overview, /sets, /sets/[setNum], /themes, /themes/[id]
   lib/api.ts           typed client for the FastAPI endpoints
-data/                  Rebrickable CSV downloads (inventory_parts.csv uses Git LFS)
+data/                  full Rebrickable CSV downloads (inventory_parts.csv uses Git LFS)
+  subset/              small foreign-key-valid sample (Indiana Jones sets)
 milestone-0/           contains changelog for each milestone
 milestone-1/
 milestone-2/
@@ -32,7 +33,7 @@ milestone-3/
 ## Prerequisites
 
 - Docker Desktop
-- Git LFS (`git lfs install && git lfs pull`), since `data/inventory_parts.csv` is stored with LFS
+- Git LFS (`git lfs install && git lfs pull`), since `data/inventory_parts.csv` is stored with LFS. Not needed for the `data/subset/` sample.
 
 ## How to Run the Application
 
@@ -44,13 +45,21 @@ From the project root:
 docker compose up --build
 ```
 
-MySQL is initialized from `db/schema.sql`. Once the database is healthy, the importer loads every CSV in `data/` (about 2.1 million rows, roughly 30 seconds). The API and the Next.js frontend then start.
+MySQL is initialized from `db/schema.sql`. Once the database is healthy, the importer loads every CSV in `data/` (the full dataset, about 2.1 million rows, roughly 30 seconds). The API and the Next.js frontend then start.
 
-On later starts the importer sees the data is already loaded and exits right away. To reload after changing the CSVs or the schema:
+On later starts the importer sees the data is already loaded and exits right away. To reload anyway, for example after changing the schema:
 
 ```bash
 docker compose run --rm -e FORCE_IMPORT=1 importer
 ```
+
+To load the small Indiana Jones sample in `data/subset/` instead (no Git LFS needed), point `DATA_DIR` at it. Run the same command without the override to switch back to the full dataset:
+
+```bash
+docker compose run --rm -e DATA_DIR=/data/subset importer
+```
+
+The `lego_sets` database also contains `users`, `user_parts`, and `user_completed_sets`. The importer never drops these. The sample SQL script seeds a demo user and example user data before running its user-related queries.
 
 ### 2. Open the website
 
@@ -82,7 +91,7 @@ It reads `API_URL` (default `http://localhost:8000`). Pages fetch from FastAPI o
 
 MySQL is available on host port **3307** (mapped from container 3306) so it does not conflict with a local MySQL install.
 
-### 3. Run the sample SQL test
+### 3. Run the sample SQL queries
 
 With the stack running:
 
@@ -90,7 +99,7 @@ With the stack running:
 docker compose exec -T db mysql -uroot -pcs348pass --default-character-set=utf8mb4 --batch --raw lego_sets < db/test-sample.sql
 ```
 
-Compare the output to `db/test-sample.out`.
+The queries match the small Indiana Jones dataset in `data/subset/`, so load it first (`docker compose run --rm -e DATA_DIR=/data/subset importer`). Compare the output to `db/test-sample.out`. The `completed_at` timestamp will differ, since the script sets it when it runs.
 
 ### 4. Stop the app
 

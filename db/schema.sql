@@ -139,4 +139,32 @@ CREATE TABLE IF NOT EXISTS set_mappings (
     ext_system VARCHAR(16) NOT NULL,
     ext_id VARCHAR(64) NOT NULL,
     PRIMARY KEY (set_num, ext_system, ext_id)
-)
+);
+
+-- App users and what they own or have built.
+CREATE TABLE IF NOT EXISTS users (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS user_parts (
+    user_id INT UNSIGNED NOT NULL,
+    part_num VARCHAR(32) NOT NULL,
+    color_id INT NOT NULL,
+    quantity INT NOT NULL,
+    PRIMARY KEY (user_id, part_num, color_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (part_num) REFERENCES parts(part_num),
+    FOREIGN KEY (color_id) REFERENCES colors(id)
+);
+
+CREATE TABLE IF NOT EXISTS user_completed_sets (
+    user_id INT UNSIGNED NOT NULL,
+    set_num VARCHAR(32) NOT NULL,
+    completed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, set_num),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (set_num) REFERENCES sets(set_num) ON DELETE CASCADE
+);

@@ -1,4 +1,16 @@
-set_num	name	year	num_parts	theme_name
-10316-1	Lord of the Rings: Rivendell	2023	6181	Icons
-75192-1	Millennium Falcon	2017	7541	Ultimate Collector Series
-75355-1	X-Wing Starfighter	2023	1949	Ultimate Collector Series
+Query 1
+set_num         name                            year
+COMCON002-1     Indiana Jones Brickmaster Pack  2008
+
+Query 2
+set_num         name                            year    num_parts
+20004-1         Jungle Cruiser                  2008    83
+COMCON002-1     Indiana Jones Brickmaster Pack  2008    116
+
+Query 3
+set_num         name                            can_build
+COMCON002-1     Indiana Jones Brickmaster Pack  0
+
+Query 4
+set_num         name                            completed_at
+COMCON002-1     Indiana Jones Brickmaster Pack  2026-10-24 00:26:11? 
